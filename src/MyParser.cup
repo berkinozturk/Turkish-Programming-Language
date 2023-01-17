@@ -1,0 +1,32 @@
+import java_cup.runtime.*;
+/* Terminals (tokens returned by the scanner). */
+terminal ERROR, SEMI, PLUS, MINUS, TIMES, DIVIDE, MOD, UMINUS, LPAREN, RPAREN, YAZ;
+terminal Integer NUMBER;
+/* Non-terminals */
+non terminal expr_list, expr_print;
+non terminal Integer expr;
+/* Precedences */
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE, MOD;
+precedence left UMINUS;
+/* Grammar */
+expr_list ::= expr_list expr_print | expr_print ;
+expr_print ::= YAZ LPAREN expr:e RPAREN {: System.out.println(e); :} SEMI | error SEMI;
+expr ::= expr:e1 PLUS expr:e2
+	{: RESULT = new Integer(e1.intValue() + e2.intValue()); :}
+	| expr:e1 MINUS expr:e2
+	{: RESULT = new Integer(e1.intValue() - e2.intValue()); :}
+	| expr:e1 TIMES expr:e2
+	{: RESULT = new Integer(e1.intValue() * e2.intValue()); :}
+	| expr:e1 DIVIDE expr:e2
+	{: RESULT = new Integer(e1.intValue() / e2.intValue()); :}
+	| expr:e1 MOD expr:e2
+	{: RESULT = new Integer(e1.intValue() % e2.intValue()); :}
+	| NUMBER:n 
+	{: RESULT = n; :}
+	| MINUS expr:e
+	{: RESULT = new Integer(0 - e.intValue()); :} %prec UMINUS
+	| LPAREN expr:e RPAREN
+	{: RESULT = e; :} ;
+
+
