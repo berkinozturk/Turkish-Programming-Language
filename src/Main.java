@@ -9,16 +9,15 @@ java Main example.txt
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 class Main {
-	public static void main(String[] args) throws FileNotFoundException {
-		String fileName = "example.txt";
-		MyParser parser = new MyParser(new MyScanner(new FileReader(fileName)));
-		try {
-			parser.parse();
-			//parser.debug_parse();
-		}
-		catch (Exception e) {
-			System.out.println("Caught an exception.");
-		}
-	}
+    public static void main(String[] args) throws FileNotFoundException {
+        String fileName = "example.txt";
+        MyParser parser = new MyParser(new MyScanner(new FileReader(fileName)));
+        try {
+            parser.parse();
+            //parser.debug_parse();
+        }
+        catch (Exception e) {
+            System.out.println("Caught an exception.");
+        }
+    }
 }
-
