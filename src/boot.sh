@@ -1,10 +1,16 @@
 #!/bin/bash
 
-set +v
+#compile
+jflex-1.6.1/bin/jflex lcalc.flex;
+java -cp .:java-cup-11b.jar java_cup.Main  < ycalc.cup;
+javac -cp .:java-cup-11b.jar Main.java;
 
-java -jar java-cup-11b.jar -parser MyParser -symbols MySymbol < MyParser.cup
-java -jar jflex-1.8.2.jar MyScanner.lex
-javac *.java
-java Main example.txt
+#run
+java -cp .:java-cup-11b-runtime.jar Main test.txt;
 
-read -n 1 -s -r -p "Press any key to continue..."
+#clean
+rm Lexer.java;
+rm parser.java;
+rm sym.java;
+rm *.class;
+
