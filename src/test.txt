@@ -1,0 +1,30 @@
+begin
+	a = 1;
+	b = 2;
+	c = a + b;
+    yaz (c);
+
+	eğer (a>5) ise
+	yaz(a);
+	ya da (a < 5) ise
+	    yaz("hello");
+
+
+
+
+	s1 = "asd";
+	s2 = "dsa";
+	s3 = concatenate(s1, s2);
+	yaz(s3);
+
+	yaz(length(s3));
+	yaz(substring(s3, 1, 3));
+	yaz(position(s3, s2));
+
+
+	yaz("enter string, I will print it");
+	yaz(readstr);
+
+	yaz("enter int, I will print it");
+	yaz(readint)
+end
