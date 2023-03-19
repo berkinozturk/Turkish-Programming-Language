@@ -7,7 +7,7 @@ You can see our language structure that we created below. </br>
 # Assignment Operator
 
 <p align="center">
-  <img src="![01](https://user-images.githubusercontent.com/81514648/226187051-594c250e-1103-45f3-8350-a56b71bbbe77.png)" alt="Title"/>
+  <img src="![01](https://user-images.githubusercontent.com/81514648/226187279-3ac489f1-95e4-4081-b08e-94cc9a5c8907.png)" alt="AO"/>
 </p>
 
 
