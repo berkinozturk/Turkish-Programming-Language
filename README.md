@@ -4,7 +4,7 @@ Unlike existing programming languages, our language is specifically designed for
 
 ## 1.1 The Grammar of the Language </br>
 You can see our language structure that we created below. </br>
-NOT: The project is in the development phase and changes may occur in the language structure in the following stages. </br>
+<b> NOT: </b> The project is in the development phase and changes may occur in the language structure in the following stages. </br>
 
 ## Assignment Operator
 
