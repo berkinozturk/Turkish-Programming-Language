@@ -4,8 +4,7 @@ Unlike existing programming languages, our language is specifically designed for
 
 ## 1.1 The Grammar of the Language </br>
 You can see our language structure that we created below. </br>
-NOT: </br>
-The project is in the development phase and changes may occur in the language structure in the following stages. </br>
+NOT: The project is in the development phase and changes may occur in the language structure in the following stages. </br>
 
 ## Assignment Operator
 
@@ -95,7 +94,7 @@ To call this function: </br>
 The programming language is developed using Java CUP, a parser generator that allows for high flexibility and customization. This approach enables us to create a language that is tailored to the needs of Turkish speakers and that can help them understand and work with programming concepts in a more natural and intuitive way. </br>
 You can access the Jflex and CUP setup tutorial on macOS and Windows from the links below. </br>
 
-file:///C:/Users/BUSE%20OZEL/Desktop/bel2.pdf </br>
+https://cdn.discordapp.com/attachments/1002578665277771776/1085266348818575470/JFlex_and_Cup_Installation_for_Mac.pdf </br>
 [Installation of Jflex and CUP for macOS](file:///C:/Users/BUSE%20OZEL/Desktop/bel2.pdf)   </br>
 
 
