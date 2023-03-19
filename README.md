@@ -93,7 +93,7 @@ To call this function: </br>
 The programming language is developed using Java CUP, a parser generator that allows for high flexibility and customization. This approach enables us to create a language that is tailored to the needs of Turkish speakers and that can help them understand and work with programming concepts in a more natural and intuitive way. </br>
 You can access the Jflex and CUP setup tutorial on macOS and Windows from the links below. </br>
 
-[Installation of Jflex and CUP for Windows](file:///C:/Users/BUSE%20OZEL/Desktop/bel1.pdf) </br>
+[Intro.pdf](file:///C:/Users/BUSE%20OZEL/Desktop/bel1.pdf) </br>
 [Installation of Jflex and CUP for macOS](file:///C:/Users/BUSE%20OZEL/Desktop/bel2.pdf)   </br>
 
 
