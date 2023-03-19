@@ -6,8 +6,9 @@ You can see our language structure that we created below. </br>
 
 # Assignment Operator
 
-(![01](https://user-images.githubusercontent.com/81514648/226187524-2faf2f29-f07f-4cf2-8bca-3db2287c9d36.png))
-
+<p align="center">
+![01](https://user-images.githubusercontent.com/81514648/226187524-2faf2f29-f07f-4cf2-8bca-3db2287c9d36.png)
+</p>
 
 
 
