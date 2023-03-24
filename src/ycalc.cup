@@ -30,7 +30,7 @@ terminal           AND, OR, NOT, TRUE, FALSE; // boolean
 
 // flow
 terminal           BEGIN, END, EXIT; 
-terminal           EGER, ISE, ELSE, YADA; //eğer, ise, ya da eklendi
+terminal           EGER, ISE, DEGIL, YADA; //eğer, ise, ya da eklendi
 terminal           WHILE, DO; 
 
 terminal           YAZ, READINT, LENGTH, POSITION, READSTR, CONCATENATE, SUBSTRING;  // commands
@@ -42,6 +42,7 @@ terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MODE, LPAREN, RPAREN
 terminal Integer   NUM;
 terminal String    IDENT;
 terminal String    STRING;
+terminal           LISTE;
 
 
 /** Non-terminals **/
@@ -49,6 +50,9 @@ non terminal Expr expr;
 non terminal Expr num_expr;
 non terminal Expr str_expr;
 non terminal Expr bool_expr;
+non terminal Expr list_stat;
+non terminal ExpressionList expr_list;
+//non terminal Expr expr_list;
 
 non terminal Operator num_op;
 non terminal Condition num_rel;
@@ -56,6 +60,8 @@ non terminal Condition str_rel;
 
 non terminal SimpleInstruction simple_instr;
 non terminal InstructionList instr;
+
+
 
 non terminal SimpleInstruction assign_stat;
 non terminal SimpleInstruction if_stat;
@@ -70,7 +76,8 @@ precedence left TIMES, DIVIDE, MODE;
 precedence left OR, AND;
 precedence left NOT;
 
-precedence left ELSE;
+precedence left DEGIL;
+precedence left YADA;
 
 start with program;
 
@@ -87,7 +94,9 @@ num_op ::= PLUS             {: RESULT = new PlusOperator(); :}
 expr ::= IDENT:i            {: RESULT = new ID(i); :}
             |num_expr:e     {: RESULT = e; :}
             |str_expr:e     {: RESULT = e; :}
+            |list_stat:e    {: RESULT = e; :}
             ;
+
 
 num_expr ::=  NUM:e
                 {:
@@ -174,8 +183,12 @@ instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
 assign_stat ::= IDENT:i ASSIGN expr:e          {: RESULT = new AssignInstruction(i,e); :}
                 ;
 
-if_stat ::= EGER bool_expr:c ISE simple_instr:s    {: RESULT = new IfInstruction(c, s); :}
-            | YADA bool_expr:c ISE simple_instr:s  {:  RESULT = new IfElseInstruction(c, s); :} //ya da'ya tekrar bakın
+
+if_stat ::= EGER bool_expr:c ISE  simple_instr:s    {: RESULT = new IfInstruction(c, s); :}
+
+          | EGER bool_expr:c ISE  simple_instr:s YADA bool_expr:c2 ISE simple_instr:s2  {:  RESULT = new IfElseInstruction(c, s, c2, s2); :}
+
+          | EGER bool_expr:c ISE simple_instr:s YADA bool_expr:c2 ISE simple_instr:s2 DEGIL ISE simple_instr:s3   {:  RESULT = new ElseInstruction(c, s,c2, s2,s3); :}
             ;
 
 while_stat ::= WHILE bool_expr:c DO simple_instr:s       {: RESULT = new WhileInstruction(c, s); :}
@@ -184,6 +197,8 @@ while_stat ::= WHILE bool_expr:c DO simple_instr:s       {: RESULT = new WhileIn
 
 output_stat ::= YAZ LPAREN expr:e  RPAREN               {: RESULT = new OutputInstruction(e); :}
             ;
+
+//aaaa ::= aaaa YADA bool_expr:c2 ISE simple_instr:s2 | YADA bool_expr:c2 ISE simple_instr:s2;
 
 program ::= instr:i
           {:

@@ -24,6 +24,7 @@ public class sym {
   public static final int OR = 3;
   public static final int COMMA = 33;
   public static final int BEGIN = 7;
+  public static final int LISTE = 44;
   public static final int NUM = 41;
   public static final int PLUS = 34;
   public static final int EXIT = 9;
@@ -37,7 +38,6 @@ public class sym {
   public static final int IDENT = 42;
   public static final int EQ = 24;
   public static final int TIMES = 36;
-  public static final int ELSE = 12;
   public static final int EGER = 10;
   public static final int POSITION = 19;
   public static final int ISE = 11;
@@ -45,6 +45,7 @@ public class sym {
   public static final int NE = 29;
   public static final int END = 8;
   public static final int STRING = 43;
+  public static final int DEGIL = 12;
   public static final int STREQ = 30;
   public static final int FALSE = 6;
   public static final int GT = 27;
@@ -63,7 +64,7 @@ public class sym {
   "EXIT",
   "EGER",
   "ISE",
-  "ELSE",
+  "DEGIL",
   "YADA",
   "WHILE",
   "DO",
@@ -94,7 +95,8 @@ public class sym {
   "RPAREN",
   "NUM",
   "IDENT",
-  "STRING"
+  "STRING",
+  "LISTE"
   };
 }
 

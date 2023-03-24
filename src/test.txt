@@ -1,15 +1,19 @@
 begin
-	a = 1;
+	a = 9;
 	b = 2;
 	c = a + b;
     yaz (c);
 
-	eğer (a>5) ise
-	yaz(a);
-	ya da (a < 5) ise
-	    yaz("hello");
 
 
+
+    eğer (a<0) ise
+        yaz("gizem")
+    ya da (b>0) ise
+        yaz("irem")
+
+    değil ise
+        yaz("berkin");
 
 
 	s1 = "asd";

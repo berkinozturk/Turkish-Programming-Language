@@ -23,6 +23,7 @@ import java_cup.runtime.*;
 LineTerminator = \r|\n|\r\n
 WhiteSpace     = {LineTerminator} | [ \t\f]
 
+
 NUM = [0-9]+
 IDENT = [A-Za-z_][A-Za-z_0-9]*
 STRING = \"([^\\\"]|\\.)*\"
@@ -45,17 +46,19 @@ STRING = \"([^\\\"]|\\.)*\"
     "eğer"            { return symbol(sym.EGER); }
     "ise"             { return symbol(sym.ISE); }
     "ya da"           { return symbol(sym.YADA); }
-    "else"            { return symbol(sym.ELSE); }
+    "değil"           { return symbol(sym.DEGIL); }
     "while"           { return symbol(sym.WHILE); }
     "do"              { return symbol(sym.DO); }
 
     "yaz"             { return symbol(sym.YAZ); }
+    "liste"           { return symbol(sym.LISTE); }
     "readint"         { return symbol(sym.READINT); }
     "length"          { return symbol(sym.LENGTH); }
     "position"        { return symbol(sym.POSITION); }
     "readstr"         { return symbol(sym.READSTR); }
     "concatenate"     { return symbol(sym.CONCATENATE); }
     "substring"       { return symbol(sym.SUBSTRING); }
+
 
     "="               {return symbol(sym.ASSIGN); }
     ":="              { return symbol(sym.EQ); }
@@ -82,7 +85,9 @@ STRING = \"([^\\\"]|\\.)*\"
     {IDENT}       { return symbol(sym.IDENT, new String(yytext()));}
     {STRING}      { return symbol(sym.STRING, new String(yytext())); }
 
-    {WhiteSpace}       { /* do nothing */ }   
+    {WhiteSpace}       { /* do nothing */ }
+    {LineTerminator} { return symbol(sym.SEMI); }
+
     <<EOF>> { return symbol(sym.EOF); }
 }
 

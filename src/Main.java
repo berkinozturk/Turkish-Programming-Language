@@ -9,7 +9,7 @@ interface SimpleInstruction { void run(HashMap<String,Object> hm); }
 
 interface WhileInstructionI extends SimpleInstruction {void run(HashMap<String, Object> hm); }
 interface IfInstructionI extends SimpleInstruction {void run(HashMap<String, Object> hm); }
-   
+
 public class Main {
 
 	private HashMap<String, Object> hm = new HashMap<>();
@@ -65,7 +65,7 @@ class AssignInstruction implements SimpleInstruction
 
 	public void run(HashMap<String, Object> hm)
 	{
-			hm.put(name, val.run(hm));
+		hm.put(name, val.run(hm));
 	}
 }
 
@@ -524,6 +524,8 @@ class OrBooleanExpression implements Expr
 	}
 }
 
+
+
 /** STRING OPERATIONS*/
 
 class StringExpression implements Expr
@@ -632,6 +634,86 @@ class OutputInstruction implements SimpleInstruction
 }
 
 
+/*
+
+
+class List_stat implements SimpleInstruction {
+
+	private ExpressionList expressionList;
+
+	public List_stat(ExpressionList expressionList){
+		this.expressionList=expressionList;
+	}
+
+	public void run(HashMap<String, Object> hm)
+	{
+		expressionList.run(hm);
+	}
+
+}
+
+
+class ExpressionList{
+
+	private List<Expr> value;
+
+
+	public ExpressionList(Expr e) {
+		value = new ArrayList<Expr>();
+		value.add(e);
+	}
+
+	@Override
+	public void run(HashMap<String, Object> hm){
+		for (Expr si: value) {
+			si.run(hm);
+
+		}
+
+	}
+
+*/
+
+/*
+	@Override
+	public Object run(HashMap<String, Object> hm) {
+
+		for (Object obj : value) {
+			Object v = obj.run(hm);
+			valueNEW.add(v);
+		}
+
+		return valueNEW;
+	}
+*/
+
+
+/*
+	ArrayList<Object> value = new ArrayList<Object>();
+	Expr e1, e2;
+
+	public ListExpr(Expr e1, Expr e2)
+	{
+		this.e1=e1;
+		this.e2=e2;
+
+	}
+
+	@Override
+	public Object run(HashMap<String, Object> hm) {
+		Object v1 = e1.run(hm);
+		Object v2 = e2.run(hm);
+
+		value.add(v1);
+		value.add(v2);
+
+		return value;
+	}
+
+
+}
+		*/
+
 /** FLOW OPERATIONS */
 class InstructionList
 {
@@ -696,8 +778,6 @@ class IfInstruction implements IfInstructionI {
 	Expr condition;
 	SimpleInstruction simpleInstruction;
 
-	//simpleInstraction2'yi kaldırdık bu sayede ya da çalışıyor. Buraya bakılmalı.
-
 	public IfInstruction (Expr condition, SimpleInstruction simpleInstruction) {
 		this.condition = condition;
 		this.simpleInstruction = simpleInstruction;
@@ -710,22 +790,60 @@ class IfInstruction implements IfInstructionI {
 	}
 }
 
+
 class IfElseInstruction implements IfInstructionI {
 
-	Expr condition;
-	SimpleInstruction simpleInstruction;
+	Expr condition1, condition2;
+	SimpleInstruction simpleInstruction1, simpleInstruction2;
 
-	public IfElseInstruction (Expr condition, SimpleInstruction simpleInstruction) {
+	public IfElseInstruction (Expr condition1,  SimpleInstruction simpleInstruction1, Expr condition2, SimpleInstruction simpleInstruction2) {
+		this.condition1 = condition1;
+		this.condition2 = condition2;
+		this.simpleInstruction1 = simpleInstruction1;
+		this.simpleInstruction2 = simpleInstruction2;
+	}
+
+	public void run(HashMap<String, Object> hm){
+
+		if ((Boolean)condition1.run(hm)) {
+			simpleInstruction1.run(hm);
+		}
+		else if((Boolean)condition2.run(hm)){
+			simpleInstruction2.run(hm);
+		}
+	}
+}
+
+
+class ElseInstruction implements IfInstructionI {
+
+	Expr condition;
+	Expr condition2;
+	SimpleInstruction simpleInstruction;
+	SimpleInstruction simpleInstruction2;
+	SimpleInstruction simpleInstruction3;
+
+	public ElseInstruction (Expr condition, SimpleInstruction simpleInstruction,Expr condition2, SimpleInstruction simpleInstruction2, SimpleInstruction simpleInstruction3) {
 		this.condition = condition;
+		this.condition2 = condition2;
 		this.simpleInstruction = simpleInstruction;
+		this.simpleInstruction2 = simpleInstruction2;
+		this.simpleInstruction3 = simpleInstruction3;
 	}
 
 	public void run(HashMap<String, Object> hm){
 		if ((Boolean)condition.run(hm)) {
 			simpleInstruction.run(hm);
 		}
+		else if((Boolean)condition2.run(hm)){
+			simpleInstruction2.run(hm);
+		}
+		else {
+			simpleInstruction3.run(hm);
+		}
 	}
 }
+
 
 class BeginEndInstruction implements SimpleInstruction
 {
@@ -741,5 +859,3 @@ class BeginEndInstruction implements SimpleInstruction
 		instructions.run(hm);
 	}
 }
-
-
