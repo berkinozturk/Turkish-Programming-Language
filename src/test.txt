@@ -1,21 +1,31 @@
 begin
+
 	a = 1;
 	b = 2;
 	c = a + b;
     yaz (c);
 
-	eğer (a>5) ise
-	yaz(a);
-	ya da (a < 5) ise
-	    yaz("hello");
+    d =  liste (3,7,5,5,4,3,787);
+    e =  liste ("bısdufs","sdfgsdf", "sfsdfsd", 3444);
 
-
-
+    yaz(d);
+    yaz(e);
 
 	s1 = "asd";
 	s2 = "dsa";
 	s3 = concatenate(s1, s2);
 	yaz(s3);
+	yaz("ALTTAKI SAYI COUNTER: ");
+
+	eğer (a>10) ise
+        yaz("EGER")
+	ya da (a<0) ise
+	    yaz("YA DA 1")
+	ya da (b<0) ise
+	    yaz("YA DA 2")
+	değil ise
+	    yaz("DEGIL ISE");
+
 
 	yaz(length(s3));
 	yaz(substring(s3, 1, 3));
@@ -27,4 +37,6 @@ begin
 
 	yaz("enter int, I will print it");
 	yaz(readint)
+
+
 end

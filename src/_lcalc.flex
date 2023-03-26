@@ -45,10 +45,9 @@ STRING = \"([^\\\"]|\\.)*\"
     "eğer"            { return symbol(sym.EGER); }
     "ise"             { return symbol(sym.ISE); }
     "ya da"           { return symbol(sym.YADA); }
-    "değil"            { return symbol(sym.DEGIL); }
+    "else"            { return symbol(sym.ELSE); }
     "while"           { return symbol(sym.WHILE); }
     "do"              { return symbol(sym.DO); }
-    "liste"           {return symbol((sym.LIST)); }
 
     "yaz"             { return symbol(sym.YAZ); }
     "liste"           { return symbol(sym.LISTE); }
@@ -80,9 +79,9 @@ STRING = \"([^\\\"]|\\.)*\"
     "%"                { return symbol(sym.MODE);  }
     "/"                { return symbol(sym.DIVIDE); }
    
-    {NUM}            { return symbol(sym.NUM, new Integer(yytext())); }
-    {IDENT}          { return symbol(sym.IDENT, new String(yytext()));}
-    {STRING}         { return symbol(sym.STRING, new String(yytext())); }
+    {NUM}      { return symbol(sym.NUM, new Integer(yytext())); }
+    {IDENT}       { return symbol(sym.IDENT, new String(yytext()));}
+    {STRING}      { return symbol(sym.STRING, new String(yytext())); }
 
     {WhiteSpace}       { /* do nothing */ }   
     <<EOF>> { return symbol(sym.EOF); }

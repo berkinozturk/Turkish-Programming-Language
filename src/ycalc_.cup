@@ -30,19 +30,19 @@ terminal           AND, OR, NOT, TRUE, FALSE; // boolean
 
 // flow
 terminal           BEGIN, END, EXIT; 
-terminal           EGER, ISE, DEGIL, YADA; //eğer, ise, ya da eklendi
-terminal           WHILE, DO; 
+terminal           EGER, ISE, ELSE, YADA; //eğer, ise, ya da eklendi
+terminal           WHILE, DO;
 
-terminal           YAZ, READINT, LENGTH, POSITION, READSTR, CONCATENATE, SUBSTRING, LIST;  // commands
+
+terminal           YAZ, READINT, LENGTH, POSITION, READSTR, CONCATENATE, SUBSTRING;  // commands
 terminal           ASSIGN; 
 terminal   	       EQ, LT, LE, GT, GE, NE; // num_rel
 terminal    	   STREQ, STRNOTEQ; //str_rel
 
-terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MODE, LPAREN, RPAREN;
+terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MODE, LPAREN, RPAREN, LPAREN_, RPAREN_;
 terminal Integer   NUM;
 terminal String    IDENT;
 terminal String    STRING;
-terminal           LISTE;
 
 
 /** Non-terminals **/
@@ -50,9 +50,7 @@ non terminal Expr expr;
 non terminal Expr num_expr;
 non terminal Expr str_expr;
 non terminal Expr bool_expr;
-non terminal Expr list_stat;
-non terminal Expr expr_list;
-
+non terminal Expr list_expr;
 
 non terminal Operator num_op;
 non terminal Condition num_rel;
@@ -60,8 +58,6 @@ non terminal Condition str_rel;
 
 non terminal SimpleInstruction simple_instr;
 non terminal InstructionList instr;
-non terminal ListContent list_content;
-non terminal ElseIfContent if_content;
 
 non terminal SimpleInstruction assign_stat;
 non terminal SimpleInstruction if_stat;
@@ -71,13 +67,12 @@ non terminal Main program;
 
 /** Precedence */
 precedence left PLUS, MINUS;
-precedence left TIMES, DIVIDE, MODE;
+precedence left TIMES, DIVIDE, MODE; 
 
 precedence left OR, AND;
 precedence left NOT;
 
-precedence left DEGIL;
-precedence left YADA;
+precedence left ELSE;
 
 start with program;
 
@@ -94,17 +89,53 @@ num_op ::= PLUS             {: RESULT = new PlusOperator(); :}
 expr ::= IDENT:i            {: RESULT = new ID(i); :}
             |num_expr:e     {: RESULT = e; :}
             |str_expr:e     {: RESULT = e; :}
-            |list_stat:e    {: RESULT = e; :}
+            |list_expr:e    {: RESULT = e; :}
             ;
+/*
+list_expr ::= LPAREN expr:e COMMA list_expr:li RPAREN {:  ArrayList<Object> list = new ArrayList<>(); list.add(e);  RESULT = new ArrayExpression(list); :}
+            | LPAREN expr:e RPAREN {: RESULT = ArrayExpression(e); :}
+            ;
+*/
 
-list_content ::=  list_content:a  COMMA   expr:e      {: a.add(e); RESULT = a;:}
-                        | expr:e      {: RESULT = new ListContent(e);:} ;
+/*
+list_stat ::= LPAREN expr_list:el RPAREN {:
+                  ArrayList<Object> list = new ArrayList<>();
+                  if (el != null) {
+                      list.addAll(el);
+                  }
+                  RESULT = new ListExpr(list);
+                :}
+                ;
 
-list_stat ::= LIST LPAREN list_content:e RPAREN {:
-    RESULT = new ListExpr(e.getExpr());
-:};
+expr_list ::=  COMMA expr:e  {:
+                  ArrayList<Object> list = new ArrayList<>();
+                  list.add(e);
+                  RESULT = list;
+                :}
+                | expr_list COMMA expr:e {:
+                  expr_list.add(e);
+                  RESULT = expr_list;
+                :}
+                ;
+*/
 
+/*
 
+list_expr ::= LPAREN expr:e COMMA list_expr:li RPAREN {:  ArrayList<Object> list = new ArrayList<>(); list.add(e);  RESULT = new ListExpr(list); :}
+            | LPAREN expr:e RPAREN {: RESULT = ListExpr(e); :}
+            ;
+ */
+
+list_stat ::= LPAREN expr:e1 COMMA expr:e2 RPAREN {:
+                  ArrayList<Object> list = new ArrayList<>();
+                  list.add(e1);
+                  list.add(e2);
+                  RESULT = new ListExpr(list);
+              :}
+            | LPAREN RPAREN {:
+                  RESULT = new ListExpr(new ArrayList());
+              :}
+            ;
 
 num_expr ::=  NUM:e
                 {:
@@ -164,7 +195,7 @@ num_rel ::=   EQ         {: RESULT = new EqCond(); :}
 
 str_rel ::= STREQ     {: RESULT = new StrEqCond(); :}
           | STRNOTEQ  {: RESULT = new StrNotEqCond(); :}
-          ;
+          ; 
 
 bool_expr ::= TRUE                               {: RESULT = new BooleanExpression(true); :}
             | FALSE                              {: RESULT = new BooleanExpression(false); :}
@@ -184,26 +215,17 @@ simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | EXIT                             {: System.exit(0); :}
               ;
 
-instr ::= instr:i SEMI simple_instr:si            {: i.add(si); RESULT = i; :}
+instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
         | simple_instr:si                        {: RESULT = new InstructionList(si); :}
         ;
 
 assign_stat ::= IDENT:i ASSIGN expr:e          {: RESULT = new AssignInstruction(i,e); :}
                 ;
 
-
-if_stat ::= EGER bool_expr:c ISE  simple_instr:s    {: RESULT = new IfInstruction(c, s); :}
-
-          | EGER bool_expr:c ISE  simple_instr:s if_content:cont  {: RESULT = new IfElseInstruction(c, s, cont.getExpr(), cont.getSimpleinsList()); :}
-
-          | EGER bool_expr:c ISE simple_instr:s if_content:cont DEGIL ISE simple_instr:s3   {:  RESULT = new ElseInstruction(c, s, cont.getExpr(), cont.getSimpleinsList(), s3); :}
-
-          ;
-
-if_content ::= if_content:cont YADA bool_expr:c2 ISE simple_instr:s2  {:cont.add(c2,s2); RESULT = cont;:}
-            |   YADA bool_expr:c2 ISE simple_instr:s2  {: RESULT = new ElseIfContent(c2, s2); :}
+if_stat ::= EGER bool_expr:c ISE simple_instr:s  {: RESULT = new IfInstruction(c, s); :}
+            | YADA bool_expr:c ISE simple_instr:s  {:  RESULT = new IfElseInstruction(c, s); :} //ya da'ya tekrar bakın
+          //  | EGER bool_expr:c ISE simple_instr:s1 ELSE simple_instr:s2 {:RESULT = new IfElseIns(c,s1,s2);:}
             ;
-
 
 while_stat ::= WHILE bool_expr:c DO simple_instr:s       {: RESULT = new WhileInstruction(c, s); :}
             | DO simple_instr:s WHILE bool_expr:c        {: RESULT = new DoWhileInstruction(c, s); :}

@@ -11,10 +11,10 @@
 
 /*
   Commented By: Christopher Lopes
-  File Name: Main.java
+  File Name: Main_.java
   To Create: 
-  After the scanner, lcalc.flex, and the parser, ycalc.cup, have been created.
-  > javac Main.java
+  After the scanner, lcalc.flex, and the parser, ycalc_.cup, have been created.
+  > javac Main_.java
   
   To Run: 
   > java Main test.txt
