@@ -18,13 +18,16 @@ begin
 	yaz("ALTTAKI SAYI COUNTER: ");
 
 	eğer (a>10) ise
-        yaz("EGER")
-	ya da (a<0) ise
-	    yaz("YA DA 1")
-	ya da (b<0) ise
-	    yaz("YA DA 2")
-	değil ise
-	    yaz("DEGIL ISE");
+        yaz("EGER") +
+        yaz("RECURSIVE")
+    ya da (a<10) ise
+        yaz("yada çalıştı") +
+        yaz("dostuum")
+    ya da (b<2) ise
+        yaz("yada222222 çalıştı") +
+        yaz("dostuum2222222")
+    değil ise
+        yaz("DEGIL");
 
 
 	yaz(length(s3));

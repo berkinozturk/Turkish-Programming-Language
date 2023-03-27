@@ -41,7 +41,7 @@ STRING = \"([^\\\"]|\\.)*\"
     "begin"           { return symbol(sym.BEGIN); }
     "end"             { return symbol(sym.END); }
     "exit"            { return symbol(sym.EXIT); }
-      //eğer, ise, ya da eklendi.
+
     "eğer"            { return symbol(sym.EGER); }
     "ise"             { return symbol(sym.ISE); }
     "ya da"           { return symbol(sym.YADA); }

@@ -741,47 +741,80 @@ class DoWhileInstruction implements WhileInstructionI
 class IfInstruction implements IfInstructionI {
 
 	Expr condition;
-	SimpleInstruction simpleInstruction;
+	ArrayList<SimpleInstruction> recursiveList;
 
-	public IfInstruction (Expr condition, SimpleInstruction simpleInstruction) {
+	public IfInstruction (Expr condition,ArrayList<SimpleInstruction> recursiveList) {
 		this.condition = condition;
-		this.simpleInstruction = simpleInstruction;
+		this.recursiveList = recursiveList;
 	}
-
 	public void run(HashMap<String, Object> hm){
+
 		if ((Boolean)condition.run(hm)) {
-			simpleInstruction.run(hm);
+			for(int i =0; i < recursiveList.size(); i++){
+				recursiveList.get(i).run(hm);
+			}
 		}
 	}
 }
 
+class IfElseIfInstruction implements IfInstructionI {
+
+	Expr condition;
+
+	ArrayList<SimpleInstruction> recursiveList;
+
+	ArrayList<SimpleInstruction> recursiveList2;
+
+	public IfElseIfInstruction (Expr condition, ArrayList<SimpleInstruction> recursiveList, ArrayList<SimpleInstruction> recursiveList2) {
+		this.condition = condition;
+		this.recursiveList = recursiveList;
+		this.recursiveList2 = recursiveList2;
+	}
+
+	public void run(HashMap<String, Object> hm){
+
+		if ((Boolean)condition.run(hm)) {
+			for(int i =0; i < recursiveList.size(); i++){
+				recursiveList.get(i).run(hm);
+			}
+		}
+		else {
+			for(int i =0; i < recursiveList2.size(); i++){
+				recursiveList2.get(i).run(hm);
+			}
+		}
+	}
+}
 
 class IfElseInstruction implements IfInstructionI {
 
 	Expr condition1;
-	SimpleInstruction simpleInstruction1;
+	ArrayList<SimpleInstruction> recursiveList;
 	ArrayList<Expr> boolList;
-	ArrayList<SimpleInstruction> simpleInsList;
+	private ArrayList<ArrayList<SimpleInstruction>> recursiveList2;
 
 
-	public IfElseInstruction (Expr condition1,  SimpleInstruction simpleInstruction1, ArrayList<Expr> boolList, ArrayList<SimpleInstruction> simpleInsList ) {
+	public IfElseInstruction (Expr condition1, ArrayList<SimpleInstruction> recursiveList, ArrayList<Expr> boolList, ArrayList<ArrayList<SimpleInstruction>> recursiveList2 ) {
 		this.condition1 = condition1;
 		this.boolList = boolList;
-		this.simpleInstruction1 = simpleInstruction1;
-		this.simpleInsList = simpleInsList;
+		this.recursiveList = recursiveList;
+		this.recursiveList2 = recursiveList2;
 	}
 
 	public void run(HashMap<String, Object> hm){
 
 		if ((Boolean)condition1.run(hm)) {
-			simpleInstruction1.run(hm);
+			for(int i =0; i < recursiveList.size(); i++){
+				recursiveList.get(i).run(hm);
+			}
 		}
 
 		else {
 			for(int i=0;i<boolList.size();i++){
 				if((Boolean)(boolList.get(i).run(hm))){
-					simpleInsList.get(i).run(hm);
-					break;
+					for (int a=0;a<recursiveList2.get(i).size();a++){
+						recursiveList2.get(i).get(a).run(hm);
+					}
 				}
 			}
 		}
@@ -792,37 +825,43 @@ class IfElseInstruction implements IfInstructionI {
 class ElseInstruction implements IfInstructionI {
 
 	Expr condition1;
-	SimpleInstruction simpleInstruction1;
+	ArrayList<SimpleInstruction> recursiveList;
 	ArrayList<Expr> boolList;
-	ArrayList<SimpleInstruction> simpleInsList;
-	SimpleInstruction simpleInstruction3;
+	ArrayList<ArrayList<SimpleInstruction>> simpleInsList;
+	ArrayList<SimpleInstruction> recursiveList2;
 
-	public ElseInstruction (Expr condition1,  SimpleInstruction simpleInstruction1, ArrayList<Expr> boolList, ArrayList<SimpleInstruction> simpleInsList, SimpleInstruction simpleInstruction3) {
+	public ElseInstruction(Expr condition1, ArrayList<SimpleInstruction> recursiveList, ArrayList<Expr> boolList, ArrayList<ArrayList<SimpleInstruction>> simpleInsList, ArrayList<SimpleInstruction> recursiveList2) {
 		this.condition1 = condition1;
+		this.recursiveList = recursiveList;
 		this.boolList = boolList;
-		this.simpleInstruction1 = simpleInstruction1;
 		this.simpleInsList = simpleInsList;
-		this.simpleInstruction3 = simpleInstruction3;
+		this.recursiveList2 = recursiveList2;
 	}
+
 
 	public void run(HashMap<String, Object> hm){
 		int a = 0;
 
 		if ((Boolean)condition1.run(hm)) {
-			simpleInstruction1.run(hm);
+			for(int i =0; i < recursiveList.size(); i++){
+				recursiveList.get(i).run(hm);
+			}
 		}
 
 		else {
-
 			for(int i=0;i<boolList.size();i++){
 				if((Boolean)(boolList.get(i).run(hm))){
-					simpleInsList.get(i).run(hm);
+					for (int b=0;b<simpleInsList.get(i).size();b++){
+						simpleInsList.get(i).get(b).run(hm);
+					}
 					a++;
 					break;
 				}
 			}
 			if(a==0) {
-				simpleInstruction3.run(hm);
+				for(int i =0; i < recursiveList2.size(); i++){
+					recursiveList2.get(i).run(hm);
+				}
 			}
 		}
 	}
@@ -831,41 +870,62 @@ class ElseInstruction implements IfInstructionI {
 class ElseIfContent{
 
 	private ArrayList<Expr> booleanList;
-	private ArrayList<SimpleInstruction> simpleinsList;
+	private ArrayList<ArrayList<SimpleInstruction>> recursiveList;
 
-	public ElseIfContent(Expr bool, SimpleInstruction ins){
+	public ElseIfContent(Expr bool, ArrayList<SimpleInstruction>ins){
 
 		booleanList = new ArrayList<Expr>();
-		simpleinsList = new ArrayList<SimpleInstruction>();
+		recursiveList = new ArrayList<>();
 
 		booleanList.add(bool);
-		simpleinsList.add(ins);
+		recursiveList.add(ins);
 	}
 
-	public void add(Expr bool, SimpleInstruction ins) {
+	public void add(Expr bool, ArrayList<SimpleInstruction>ins) {
 		booleanList.add(bool);
-		simpleinsList.add(ins);
+		recursiveList.add(ins);
 	}
 
 	public ArrayList<Expr> getExpr() {
 		return booleanList;
 	}
 
-	public ArrayList<SimpleInstruction> getSimpleinsList() {
-		return simpleinsList;
+	public ArrayList<ArrayList<SimpleInstruction>> getSimpleinsList() {
+		return recursiveList;
 	}
 
 	public void run(HashMap<String, Object> hm){
 		for (int i=0;i<booleanList.size();i++) {
 			booleanList.get(i).run(hm);
-			simpleinsList.get(i).run(hm);
+			for (int a=0;a<recursiveList.size();a++){
+				recursiveList.get(i).get(a).run(hm);
+			}
 
 		}
 
 	}
 
 }
+class Recursive{
+	private ArrayList<SimpleInstruction> recursiveList;
+	public Recursive(SimpleInstruction ins){
 
+		recursiveList = new ArrayList<SimpleInstruction>();
+		recursiveList.add(ins);
+	}
+	public void add(SimpleInstruction ins) {
+		recursiveList.add(ins);
+	}
+	public ArrayList<SimpleInstruction> getSimplein() {
+
+		return recursiveList;
+	}
+	public void run(HashMap<String, Object> hm){
+		for (int i=0;i<recursiveList.size();i++) {
+			recursiveList.get(i).run(hm);
+		}
+	}
+}
 
 class BeginEndInstruction implements SimpleInstruction
 {

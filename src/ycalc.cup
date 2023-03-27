@@ -68,6 +68,7 @@ non terminal SimpleInstruction if_stat;
 non terminal SimpleInstruction while_stat;
 non terminal SimpleInstruction output_stat;
 non terminal Main program;
+non terminal Recursive recursive;
 
 /** Precedence */
 precedence left PLUS, MINUS;
@@ -184,24 +185,26 @@ simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | EXIT                             {: System.exit(0); :}
               ;
 
-instr ::= instr:i SEMI simple_instr:si            {: i.add(si); RESULT = i; :}
+instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
         | simple_instr:si                        {: RESULT = new InstructionList(si); :}
         ;
 
-assign_stat ::= IDENT:i ASSIGN expr:e          {: RESULT = new AssignInstruction(i,e); :}
-                ;
+assign_stat ::= IDENT:i ASSIGN expr:e            {: RESULT = new AssignInstruction(i,e); :}
+        ;
 
+recursive::= recursive:i PLUS simple_instr:si         {: i.add(si); RESULT = i; :}
+           | simple_instr:si                     {: RESULT = new Recursive(si); :}
+          ;
 
-if_stat ::= EGER bool_expr:c ISE  simple_instr:s    {: RESULT = new IfInstruction(c, s); :}
-
-          | EGER bool_expr:c ISE  simple_instr:s if_content:cont  {: RESULT = new IfElseInstruction(c, s, cont.getExpr(), cont.getSimpleinsList()); :}
-
-          | EGER bool_expr:c ISE simple_instr:s if_content:cont DEGIL ISE simple_instr:s3   {:  RESULT = new ElseInstruction(c, s, cont.getExpr(), cont.getSimpleinsList(), s3); :}
+if_stat ::= EGER bool_expr:c ISE  recursive:s    {: RESULT = new IfInstruction(c, s.getSimplein()); :}
+          | EGER bool_expr:c ISE  recursive:s DEGIL ISE recursive:s2      {: RESULT = new IfElseIfInstruction(c, s.getSimplein(), s2.getSimplein()); :}
+          | EGER bool_expr:c ISE  recursive:s if_content:cont  {: RESULT = new IfElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList()); :}
+          | EGER bool_expr:c ISE  recursive:s if_content:cont DEGIL ISE recursive:s3   {:  RESULT = new ElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList(), s3.getSimplein()); :}
 
           ;
 
-if_content ::= if_content:cont YADA bool_expr:c2 ISE simple_instr:s2  {:cont.add(c2,s2); RESULT = cont;:}
-            |   YADA bool_expr:c2 ISE simple_instr:s2  {: RESULT = new ElseIfContent(c2, s2); :}
+if_content ::= if_content:cont YADA bool_expr:c2 ISE recursive:s2  {:cont.add(c2,s2.getSimplein()); RESULT = cont;:}
+            |   YADA bool_expr:c2 ISE recursive:s2  {: RESULT = new ElseIfContent(c2, s2.getSimplein()); :}
             ;
 
 
