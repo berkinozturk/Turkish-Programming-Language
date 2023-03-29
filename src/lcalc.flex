@@ -32,23 +32,29 @@ STRING = \"([^\\\"]|\\.)*\"
 <YYINITIAL> {
 
     /** Keywords. */
-    "and"             { return symbol(sym.AND); }
-    "or"              { return symbol(sym.OR); }
+    "ve"              { return symbol(sym.AND); }
+    "veya"            { return symbol(sym.OR); }
     "not"             { return symbol(sym.NOT); }
-    "true"            { return symbol(sym.TRUE); }
-    "false"           { return symbol(sym.FALSE); }
+    "doğru"           { return symbol(sym.TRUE); }
+    "yanlış"          { return symbol(sym.FALSE); }
 
-    "begin"           { return symbol(sym.BEGIN); }
-    "end"             { return symbol(sym.END); }
+    "başla"           { return symbol(sym.BEGIN); }
+    "bitir"           { return symbol(sym.END); }
     "exit"            { return symbol(sym.EXIT); }
+
 
     "eğer"            { return symbol(sym.EGER); }
     "ise"             { return symbol(sym.ISE); }
     "ya da"           { return symbol(sym.YADA); }
-    "değil"            { return symbol(sym.DEGIL); }
-    "while"           { return symbol(sym.WHILE); }
-    "do"              { return symbol(sym.DO); }
+    "değil"           { return symbol(sym.DEGIL); }
+    "olduğu sürece"   { return symbol(sym.WHILE); }
     "liste"           {return symbol((sym.LIST)); }
+    "değişkeni"       { return symbol(sym.DEGIS); }
+    "ile"             { return symbol(sym.ILE); }
+    "arasında"        { return symbol(sym.ARASINDA); }
+    "artarken"        { return symbol(sym.ART); }
+    "azalırken"        { return symbol(sym.AZ); }
+
 
     "yaz"             { return symbol(sym.YAZ); }
     "liste"           { return symbol(sym.LISTE); }
@@ -60,15 +66,15 @@ STRING = \"([^\\\"]|\\.)*\"
     "substring"       { return symbol(sym.SUBSTRING); }
 
     "="               {return symbol(sym.ASSIGN); }
-    ":="              { return symbol(sym.EQ); }
+    "=="              { return symbol(sym.EQ); }
     "<"               { return symbol(sym.LT); }
     "<="              { return symbol(sym.LE); }
     ">"               { return symbol(sym.GT); }
     ">="              { return symbol(sym.GE); }
-    "<>"              { return symbol(sym.NE); }
+    "!="              { return symbol(sym.NE); }
 
-    "=="              { return symbol(sym.STREQ); }
-    "!="              { return symbol(sym.STRNOTEQ); }
+    "eşit"              { return symbol(sym.STREQ); }
+    "eşit değil"        { return symbol(sym.STRNOTEQ); }
 
     ";"                { return symbol(sym.SEMI); }
     ","                { return symbol(sym.COMMA); }
@@ -77,7 +83,7 @@ STRING = \"([^\\\"]|\\.)*\"
     "+"                { return symbol(sym.PLUS); }
     "-"                { return symbol(sym.MINUS); }
     "*"                { return symbol(sym.TIMES); }
-    "%"                { return symbol(sym.MODE);  }
+    "bölümünden kalan" { return symbol(sym.MODE);  }
     "/"                { return symbol(sym.DIVIDE); }
    
     {NUM}            { return symbol(sym.NUM, new Integer(yytext())); }

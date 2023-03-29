@@ -9,6 +9,7 @@ interface SimpleInstruction { void run(HashMap<String,Object> hm); }
 
 interface WhileInstructionI extends SimpleInstruction {void run(HashMap<String, Object> hm); }
 interface IfInstructionI extends SimpleInstruction {void run(HashMap<String, Object> hm); }
+interface ForInstructionI extends SimpleInstruction {void run(HashMap<String, Object> hm); }
 
 public class Main {
 
@@ -703,9 +704,9 @@ class InstructionList
 class WhileInstruction implements WhileInstructionI
 {
 	Expr cond;
-	SimpleInstruction si;
+	private List<SimpleInstruction> si;
 
-	public WhileInstruction(Expr c, SimpleInstruction s)
+	public WhileInstruction(Expr c, ArrayList<SimpleInstruction>  s)
 	{
 		cond = c;
 		si = s;
@@ -714,30 +715,84 @@ class WhileInstruction implements WhileInstructionI
 	public void run(HashMap<String, Object> hm)
 	{
 		while ((Boolean)cond.run(hm)){
-			si.run(hm);
+			for(int i =0; i < si.size(); i++){
+				si.get(i).run(hm);
+			}
 		}
 	}
 }
 
-class DoWhileInstruction implements WhileInstructionI
-{
-	Expr cond;
-	SimpleInstruction si;
 
-	public DoWhileInstruction(Expr c, SimpleInstruction s)
-	{
-		cond = c;
-		si = s;
+class ForInstruction implements ForInstructionI{
+
+	String name;
+	Expr e1;
+	Expr e2;
+	Expr e3;
+	private List<SimpleInstruction> recursiveList;
+
+	public ForInstruction(String name, Expr e1, Expr e2, Expr e3, ArrayList<SimpleInstruction> recursiveList){
+		this.name = name;
+		this.e1 = e1;
+		this.e2 = e2;
+		this.e3 = e3;
+		this.recursiveList = recursiveList;
 	}
 
-	public void run(HashMap<String, Object> hm)
-	{
-		do
-			si.run(hm);
-		while ((Boolean)cond.run(hm));
+	@Override
+	public void run(HashMap<String, Object> hm) {
+		Expr e = null;
+		if(((Integer)e1.run(hm)).intValue()>((Integer)e2.run(hm)).intValue()){
+			e=e1;
+			e1=e2;
+			e2=e;
+		}
+		int i = ((Integer)e1.run(hm)).intValue();
+		while (i <= ((Integer)e2.run(hm)).intValue()){
+			hm.put(name, i);
+			for(int j = 0; j < recursiveList.size(); j++){
+				recursiveList.get(j).run(hm);
+			}
+			i += ((Integer)e3.run(hm)).intValue();
+		}
 	}
 }
+class ForInstruction2 implements ForInstructionI{
 
+	String name;
+	Expr e1;
+	Expr e2;
+	Expr e3;
+	private List<SimpleInstruction> recursiveList;
+
+	public ForInstruction2(String name, Expr e1, Expr e2, Expr e3, ArrayList<SimpleInstruction> recursiveList){
+		this.name = name;
+		this.e1 = e1;
+		this.e2 = e2;
+		this.e3 = e3;
+
+		this.recursiveList = recursiveList;
+	}
+
+	@Override
+	public void run(HashMap<String, Object> hm) {
+		Expr e = null;
+		if(((Integer)e1.run(hm)).intValue()>((Integer)e2.run(hm)).intValue()){
+			e=e1;
+			e1=e2;
+			e2=e;
+		}
+		int i = ((Integer)e2.run(hm)).intValue();
+		while (i >= ((Integer)e1.run(hm)).intValue()){
+			hm.put(name, i);
+			for(int j = 0; j < recursiveList.size(); j++){
+				recursiveList.get(j).run(hm);
+			}
+			i -= ((Integer)e3.run(hm)).intValue();
+		}
+
+	}
+}
 class IfInstruction implements IfInstructionI {
 
 	Expr condition;

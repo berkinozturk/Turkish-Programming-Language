@@ -1,4 +1,4 @@
-begin
+başla
 
 	a = 1;
 	b = 2;
@@ -14,21 +14,28 @@ begin
 	s1 = "asd";
 	s2 = "dsa";
 	s3 = concatenate(s1, s2);
+	s4 = "asd";
 	yaz(s3);
 	yaz("ALTTAKI SAYI COUNTER: ");
 
-	eğer (a>10) ise
+	eğer (a<10 ve b<5) ise
         yaz("EGER") +
         yaz("RECURSIVE")
     ya da (a<10) ise
         yaz("yada çalıştı") +
         yaz("dostuum")
     ya da (b<2) ise
-        yaz("yada222222 çalıştı") +
-        yaz("dostuum2222222")
+        yaz("yada222222 çalıştı")
     değil ise
         yaz("DEGIL");
 
+    i değişkeni 15 ile 5 arasında 3 artarken
+    eğer(i == 7) ise
+    yaz("for içi eğer")
+    ya da (s1 eşit s4) ise
+    yaz("eşiteşiteşiteşit")
+    değil ise
+    yaz(i);
 
 	yaz(length(s3));
 	yaz(substring(s3, 1, 3));
@@ -42,4 +49,4 @@ begin
 	yaz(readint)
 
 
-end
+bitir

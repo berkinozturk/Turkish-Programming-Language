@@ -6,52 +6,56 @@
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int STRNOTEQ = 32;
-  public static final int DIVIDE = 38;
-  public static final int SUBSTRING = 22;
-  public static final int READSTR = 20;
-  public static final int GE = 29;
-  public static final int CONCATENATE = 21;
+  public static final int ILE = 16;
+  public static final int STRNOTEQ = 34;
+  public static final int DIVIDE = 42;
+  public static final int SUBSTRING = 24;
+  public static final int READSTR = 22;
+  public static final int GE = 31;
+  public static final int CONCATENATE = 23;
   public static final int YADA = 13;
-  public static final int READINT = 17;
-  public static final int LPAREN = 40;
-  public static final int SEMI = 33;
-  public static final int MINUS = 36;
-  public static final int RPAREN = 41;
+  public static final int READINT = 19;
+  public static final int ARASINDA = 17;
+  public static final int LPAREN = 44;
+  public static final int SEMI = 37;
+  public static final int MINUS = 40;
+  public static final int RPAREN = 45;
   public static final int NOT = 4;
   public static final int AND = 2;
-  public static final int LT = 26;
+  public static final int LT = 28;
   public static final int OR = 3;
-  public static final int COMMA = 34;
+  public static final int COMMA = 38;
   public static final int BEGIN = 7;
-  public static final int LISTE = 45;
-  public static final int NUM = 42;
-  public static final int PLUS = 35;
+  public static final int LISTE = 49;
+  public static final int NUM = 46;
+  public static final int PLUS = 39;
   public static final int EXIT = 9;
-  public static final int ASSIGN = 24;
-  public static final int LE = 27;
+  public static final int ASSIGN = 26;
+  public static final int LE = 29;
   public static final int EOF = 0;
   public static final int TRUE = 5;
   public static final int error = 1;
-  public static final int YAZ = 16;
-  public static final int MODE = 39;
-  public static final int IDENT = 43;
-  public static final int EQ = 25;
-  public static final int TIMES = 37;
+  public static final int YAZ = 18;
+  public static final int MODE = 43;
+  public static final int IDENT = 47;
+  public static final int EQ = 27;
+  public static final int TIMES = 41;
   public static final int EGER = 10;
-  public static final int POSITION = 19;
+  public static final int POSITION = 21;
   public static final int ISE = 11;
   public static final int WHILE = 14;
-  public static final int LIST = 23;
-  public static final int NE = 30;
+  public static final int LIST = 25;
+  public static final int DEGIS = 15;
+  public static final int NE = 32;
+  public static final int ART = 35;
+  public static final int AZ = 36;
   public static final int END = 8;
-  public static final int STRING = 44;
+  public static final int STRING = 48;
   public static final int DEGIL = 12;
-  public static final int STREQ = 31;
+  public static final int STREQ = 33;
   public static final int FALSE = 6;
-  public static final int GT = 28;
-  public static final int LENGTH = 18;
-  public static final int DO = 15;
+  public static final int GT = 30;
+  public static final int LENGTH = 20;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -68,7 +72,9 @@ public class sym {
   "DEGIL",
   "YADA",
   "WHILE",
-  "DO",
+  "DEGIS",
+  "ILE",
+  "ARASINDA",
   "YAZ",
   "READINT",
   "LENGTH",
@@ -86,6 +92,8 @@ public class sym {
   "NE",
   "STREQ",
   "STRNOTEQ",
+  "ART",
+  "AZ",
   "SEMI",
   "COMMA",
   "PLUS",

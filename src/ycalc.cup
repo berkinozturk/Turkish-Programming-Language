@@ -31,12 +31,14 @@ terminal           AND, OR, NOT, TRUE, FALSE; // boolean
 // flow
 terminal           BEGIN, END, EXIT; 
 terminal           EGER, ISE, DEGIL, YADA; //eğer, ise, ya da eklendi
-terminal           WHILE, DO; 
+terminal           WHILE;
+terminal           DEGIS, ILE, ARASINDA;
 
 terminal           YAZ, READINT, LENGTH, POSITION, READSTR, CONCATENATE, SUBSTRING, LIST;  // commands
 terminal           ASSIGN; 
 terminal   	       EQ, LT, LE, GT, GE, NE; // num_rel
 terminal    	   STREQ, STRNOTEQ; //str_rel
+terminal    	   ART,AZ;
 
 terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MODE, LPAREN, RPAREN;
 terminal Integer   NUM;
@@ -66,6 +68,7 @@ non terminal ElseIfContent if_content;
 non terminal SimpleInstruction assign_stat;
 non terminal SimpleInstruction if_stat;
 non terminal SimpleInstruction while_stat;
+non terminal SimpleInstruction for_stat;
 non terminal SimpleInstruction output_stat;
 non terminal Main program;
 non terminal Recursive recursive;
@@ -180,6 +183,7 @@ bool_expr ::= TRUE                               {: RESULT = new BooleanExpressi
 simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | if_stat:si                       {: RESULT = si; :}
               | while_stat:si                    {: RESULT = si; :}
+              | for_stat:si                    {: RESULT = si; :}
               | BEGIN instr:si END               {: RESULT = new BeginEndInstruction(si); :}
               | output_stat:si                   {: RESULT = si; :}
               | EXIT                             {: System.exit(0); :}
@@ -192,7 +196,7 @@ instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
 assign_stat ::= IDENT:i ASSIGN expr:e            {: RESULT = new AssignInstruction(i,e); :}
         ;
 
-recursive::= recursive:i PLUS simple_instr:si         {: i.add(si); RESULT = i; :}
+recursive::= recursive:i PLUS simple_instr:si    {: i.add(si); RESULT = i; :}
            | simple_instr:si                     {: RESULT = new Recursive(si); :}
           ;
 
@@ -207,9 +211,11 @@ if_content ::= if_content:cont YADA bool_expr:c2 ISE recursive:s2  {:cont.add(c2
             |   YADA bool_expr:c2 ISE recursive:s2  {: RESULT = new ElseIfContent(c2, s2.getSimplein()); :}
             ;
 
+for_stat::= IDENT:i DEGIS expr:e ILE expr:e2 ARASINDA expr:e3 ART recursive:s {: RESULT = new ForInstruction(i,e,e2,e3,s.getSimplein()); :}
+           |IDENT:i DEGIS expr:e ILE expr:e2 ARASINDA expr:e3 AZ recursive:s  {: RESULT = new ForInstruction2(i,e,e2,e3,s.getSimplein()); :}
+            ;
 
-while_stat ::= WHILE bool_expr:c DO simple_instr:s       {: RESULT = new WhileInstruction(c, s); :}
-            | DO simple_instr:s WHILE bool_expr:c        {: RESULT = new DoWhileInstruction(c, s); :}
+while_stat ::= LPAREN bool_expr:c RPAREN WHILE recursive:s       {: RESULT = new WhileInstruction(c, s.getSimplein()); :}
             ;
 
 output_stat ::= YAZ LPAREN expr:e  RPAREN               {: RESULT = new OutputInstruction(e); :}
