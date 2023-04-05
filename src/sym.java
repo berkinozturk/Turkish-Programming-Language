@@ -6,56 +6,59 @@
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int ILE = 16;
-  public static final int STRNOTEQ = 34;
-  public static final int DIVIDE = 42;
-  public static final int SUBSTRING = 24;
-  public static final int READSTR = 22;
-  public static final int GE = 31;
-  public static final int CONCATENATE = 23;
-  public static final int YADA = 13;
-  public static final int READINT = 19;
-  public static final int ARASINDA = 17;
-  public static final int LPAREN = 44;
-  public static final int SEMI = 37;
-  public static final int MINUS = 40;
-  public static final int RPAREN = 45;
+  public static final int STRNOTEQ = 37;
+  public static final int ILE = 17;
+  public static final int DIVIDE = 45;
+  public static final int SUBSTRING = 27;
+  public static final int READSTR = 25;
+  public static final int GE = 34;
+  public static final int CONCATENATE = 26;
+  public static final int YADA = 14;
+  public static final int READINT = 22;
+  public static final int ARASINDA = 18;
+  public static final int LPAREN = 47;
+  public static final int SEMI = 40;
+  public static final int CONTINUE = 19;
+  public static final int SONRA = 7;
+  public static final int MINUS = 43;
+  public static final int RPAREN = 48;
   public static final int NOT = 4;
   public static final int AND = 2;
-  public static final int LT = 28;
+  public static final int LT = 31;
   public static final int OR = 3;
-  public static final int COMMA = 38;
-  public static final int BEGIN = 7;
-  public static final int LISTE = 49;
-  public static final int NUM = 46;
-  public static final int PLUS = 39;
-  public static final int EXIT = 9;
-  public static final int ASSIGN = 26;
-  public static final int LE = 29;
+  public static final int COMMA = 41;
+  public static final int BEGIN = 8;
+  public static final int LISTE = 52;
+  public static final int NUM = 49;
+  public static final int PLUS = 42;
+  public static final int EXIT = 10;
+  public static final int ASSIGN = 29;
+  public static final int LE = 32;
   public static final int EOF = 0;
   public static final int TRUE = 5;
   public static final int error = 1;
-  public static final int YAZ = 18;
-  public static final int MODE = 43;
-  public static final int IDENT = 47;
-  public static final int EQ = 27;
-  public static final int TIMES = 41;
-  public static final int EGER = 10;
-  public static final int POSITION = 21;
-  public static final int ISE = 11;
-  public static final int WHILE = 14;
-  public static final int LIST = 25;
-  public static final int DEGIS = 15;
-  public static final int NE = 32;
-  public static final int ART = 35;
-  public static final int AZ = 36;
-  public static final int END = 8;
-  public static final int STRING = 48;
-  public static final int DEGIL = 12;
-  public static final int STREQ = 33;
+  public static final int YAZ = 21;
+  public static final int MODE = 46;
+  public static final int IDENT = 50;
+  public static final int BREAK = 20;
+  public static final int EQ = 30;
+  public static final int TIMES = 44;
+  public static final int EGER = 11;
+  public static final int POSITION = 24;
+  public static final int ISE = 12;
+  public static final int WHILE = 15;
+  public static final int LIST = 28;
+  public static final int DEGIS = 16;
+  public static final int NE = 35;
+  public static final int ART = 38;
+  public static final int AZ = 39;
+  public static final int END = 9;
+  public static final int STRING = 51;
+  public static final int DEGIL = 13;
+  public static final int STREQ = 36;
   public static final int FALSE = 6;
-  public static final int GT = 30;
-  public static final int LENGTH = 20;
+  public static final int GT = 33;
+  public static final int LENGTH = 23;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -64,6 +67,7 @@ public class sym {
   "NOT",
   "TRUE",
   "FALSE",
+  "SONRA",
   "BEGIN",
   "END",
   "EXIT",
@@ -75,6 +79,8 @@ public class sym {
   "DEGIS",
   "ILE",
   "ARASINDA",
+  "CONTINUE",
+  "BREAK",
   "YAZ",
   "READINT",
   "LENGTH",

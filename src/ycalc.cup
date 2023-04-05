@@ -26,16 +26,17 @@ parser code {:
 
 /** Terminals */
 
-terminal           AND, OR, NOT, TRUE, FALSE; // boolean
+terminal           AND, OR, NOT, TRUE, FALSE, SONRA; // boolean
 
 // flow
-terminal           BEGIN, END, EXIT; 
+terminal           BEGIN, END, EXIT;
 terminal           EGER, ISE, DEGIL, YADA; //eğer, ise, ya da eklendi
 terminal           WHILE;
 terminal           DEGIS, ILE, ARASINDA;
+terminal           CONTINUE, BREAK;
 
 terminal           YAZ, READINT, LENGTH, POSITION, READSTR, CONCATENATE, SUBSTRING, LIST;  // commands
-terminal           ASSIGN; 
+terminal           ASSIGN;
 terminal   	       EQ, LT, LE, GT, GE, NE; // num_rel
 terminal    	   STREQ, STRNOTEQ; //str_rel
 terminal    	   ART,AZ;
@@ -64,6 +65,7 @@ non terminal SimpleInstruction simple_instr;
 non terminal InstructionList instr;
 non terminal ListContent list_content;
 non terminal ElseIfContent if_content;
+non terminal SimpleInstruction break_stat;
 
 non terminal SimpleInstruction assign_stat;
 non terminal SimpleInstruction if_stat;
@@ -77,7 +79,7 @@ non terminal Recursive recursive;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODE;
 
-precedence left OR, AND;
+precedence left OR, AND, SONRA;
 precedence left NOT;
 
 precedence left DEGIL;
@@ -166,7 +168,7 @@ num_rel ::=   EQ         {: RESULT = new EqCond(); :}
             | NE         {: RESULT = new NeCond(); :}
             ;
 
-str_rel ::= STREQ     {: RESULT = new StrEqCond(); :}
+str_rel ::= STREQ     {: RESULT = new EqCond(); :}
           | STRNOTEQ  {: RESULT = new StrNotEqCond(); :}
           ;
 
@@ -182,8 +184,9 @@ bool_expr ::= TRUE                               {: RESULT = new BooleanExpressi
 
 simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | if_stat:si                       {: RESULT = si; :}
+              | break_stat:si                    {: RESULT = si; :}
               | while_stat:si                    {: RESULT = si; :}
-              | for_stat:si                    {: RESULT = si; :}
+              | for_stat:si                      {: RESULT = si; :}
               | BEGIN instr:si END               {: RESULT = new BeginEndInstruction(si); :}
               | output_stat:si                   {: RESULT = si; :}
               | EXIT                             {: System.exit(0); :}
@@ -196,7 +199,7 @@ instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
 assign_stat ::= IDENT:i ASSIGN expr:e            {: RESULT = new AssignInstruction(i,e); :}
         ;
 
-recursive::= recursive:i PLUS simple_instr:si    {: i.add(si); RESULT = i; :}
+recursive::= recursive:i SONRA simple_instr:si    {: i.add(si); RESULT = i; :}
            | simple_instr:si                     {: RESULT = new Recursive(si); :}
           ;
 
@@ -204,7 +207,6 @@ if_stat ::= EGER bool_expr:c ISE  recursive:s    {: RESULT = new IfInstruction(c
           | EGER bool_expr:c ISE  recursive:s DEGIL ISE recursive:s2      {: RESULT = new IfElseIfInstruction(c, s.getSimplein(), s2.getSimplein()); :}
           | EGER bool_expr:c ISE  recursive:s if_content:cont  {: RESULT = new IfElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList()); :}
           | EGER bool_expr:c ISE  recursive:s if_content:cont DEGIL ISE recursive:s3   {:  RESULT = new ElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList(), s3.getSimplein()); :}
-
           ;
 
 if_content ::= if_content:cont YADA bool_expr:c2 ISE recursive:s2  {:cont.add(c2,s2.getSimplein()); RESULT = cont;:}
@@ -219,6 +221,9 @@ while_stat ::= LPAREN bool_expr:c RPAREN WHILE recursive:s       {: RESULT = new
             ;
 
 output_stat ::= YAZ LPAREN expr:e  RPAREN               {: RESULT = new OutputInstruction(e); :}
+            ;
+
+break_stat::= BREAK {: RESULT = new BreakInstruction(); :}
             ;
 
 program ::= instr:i

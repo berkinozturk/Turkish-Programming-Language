@@ -1,5 +1,8 @@
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 interface Expr { Object run(HashMap<String, Object> hm); }
 interface Condition { boolean test(Expr e1, Expr e2, HashMap<String, Object> hm); }
@@ -301,7 +304,11 @@ class EqCond implements Condition
 
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			return (Integer)v1 == (Integer)v2;
-		} else {
+		}
+		else if (v1 instanceof String && v2 instanceof String) {
+			return ((String)v1).equals((String)v2);
+		}
+		else {
 			System.out.println("Error: wrong objects type");
 			System.exit(1);
 			return false;
@@ -701,22 +708,40 @@ class InstructionList
 	}
 }
 
-class WhileInstruction implements WhileInstructionI
-{
+class WhileInstruction implements WhileInstructionI {
 	Expr cond;
 	private List<SimpleInstruction> si;
 
-	public WhileInstruction(Expr c, ArrayList<SimpleInstruction>  s)
-	{
+	public WhileInstruction(Expr c, ArrayList<SimpleInstruction>  s) {
 		cond = c;
 		si = s;
 	}
 
-	public void run(HashMap<String, Object> hm)
-	{
-		while ((Boolean)cond.run(hm)){
-			for(int i =0; i < si.size(); i++){
+	public void run(HashMap<String, Object> hm) {
+		boolean isBreakEncountered = false;
+
+		while ((Boolean)cond.run(hm) && !isBreakEncountered) {
+			for(int i = 0; i < si.size(); i++) {
 				si.get(i).run(hm);
+				if (si.get(i) instanceof BreakInstruction) {
+					isBreakEncountered = true;
+					break;
+				} else if (si.get(i) instanceof IfInstruction) {
+					IfInstruction ifInst = (IfInstruction) si.get(i);
+
+					if (ifInst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+
+				}
+				else if (si.get(i) instanceof IfElseInstruction) {
+					IfElseInstruction ifelseInst = (IfElseInstruction) si.get(i);
+					if (ifelseInst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -730,6 +755,7 @@ class ForInstruction implements ForInstructionI{
 	Expr e2;
 	Expr e3;
 	private List<SimpleInstruction> recursiveList;
+	boolean isBreakEncountered = false; //break control variable
 
 	public ForInstruction(String name, Expr e1, Expr e2, Expr e3, ArrayList<SimpleInstruction> recursiveList){
 		this.name = name;
@@ -741,20 +767,59 @@ class ForInstruction implements ForInstructionI{
 
 	@Override
 	public void run(HashMap<String, Object> hm) {
-		Expr e = null;
-		if(((Integer)e1.run(hm)).intValue()>((Integer)e2.run(hm)).intValue()){
-			e=e1;
+
+
+
+		if(((Integer)e1.run(hm)).intValue()>((Integer)e2.run(hm)).intValue() ){
+			Expr e=e1;
 			e1=e2;
 			e2=e;
 		}
 		int i = ((Integer)e1.run(hm)).intValue();
-		while (i <= ((Integer)e2.run(hm)).intValue()){
+		while (i <= ((Integer)e2.run(hm)).intValue() && !isBreakEncountered){
+
 			hm.put(name, i);
 			for(int j = 0; j < recursiveList.size(); j++){
 				recursiveList.get(j).run(hm);
+				if(recursiveList.get(j) instanceof BreakInstruction){ //break control
+					isBreakEncountered= true;
+					break;
+				}
+				else if (recursiveList.get(j) instanceof IfInstruction) {
+					IfInstruction ifInst = (IfInstruction) recursiveList.get(j);
+					if (ifInst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+				}
+
+				else if (recursiveList.get(j) instanceof IfElseInstruction) {
+					IfElseInstruction ifelseInst = (IfElseInstruction) recursiveList.get(j);
+					if (ifelseInst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+				}
+
+				else if (recursiveList.get(j) instanceof IfElseIfInstruction) {
+					IfElseIfInstruction ifelseifInst = (IfElseIfInstruction) recursiveList.get(j);
+					if (ifelseifInst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+				}
+				else if (recursiveList.get(j) instanceof ElseInstruction) {
+					ElseInstruction elseinst = (ElseInstruction) recursiveList.get(j);
+					if (elseinst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+				}
 			}
 			i += ((Integer)e3.run(hm)).intValue();
+
 		}
+
 	}
 }
 class ForInstruction2 implements ForInstructionI{
@@ -776,18 +841,52 @@ class ForInstruction2 implements ForInstructionI{
 
 	@Override
 	public void run(HashMap<String, Object> hm) {
-		Expr e = null;
+		boolean isBreakEncountered = false; //break control variable
+
 		if(((Integer)e1.run(hm)).intValue()>((Integer)e2.run(hm)).intValue()){
-			e=e1;
+			Expr e=e1;
 			e1=e2;
 			e2=e;
 		}
 		int i = ((Integer)e2.run(hm)).intValue();
-		while (i >= ((Integer)e1.run(hm)).intValue()){
+		while (i >= ((Integer)e1.run(hm)).intValue() && !isBreakEncountered){
 			hm.put(name, i);
 			for(int j = 0; j < recursiveList.size(); j++){
 				recursiveList.get(j).run(hm);
+				if(recursiveList.get(j) instanceof BreakInstruction){ // break
+					isBreakEncountered= true;
+					break;
+				}
+				else if (recursiveList.get(j) instanceof IfInstruction) {
+					IfInstruction ifInst = (IfInstruction) recursiveList.get(j);
+					if (ifInst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+				}
+				else if (recursiveList.get(j) instanceof IfElseInstruction) {
+					IfElseInstruction ifelseInst = (IfElseInstruction) recursiveList.get(j);
+					if (ifelseInst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+				}
+				else if (recursiveList.get(j) instanceof IfElseIfInstruction) {
+					IfElseIfInstruction ifelseifInst = (IfElseIfInstruction) recursiveList.get(j);
+					if (ifelseifInst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+				}
+				else if (recursiveList.get(j) instanceof ElseInstruction) {
+					ElseInstruction elseinst = (ElseInstruction) recursiveList.get(j);
+					if (elseinst.isBreakEncountered) {
+						isBreakEncountered = true;
+						break;
+					}
+				}
 			}
+
 			i -= ((Integer)e3.run(hm)).intValue();
 		}
 
@@ -797,20 +896,33 @@ class IfInstruction implements IfInstructionI {
 
 	Expr condition;
 	ArrayList<SimpleInstruction> recursiveList;
+	boolean isBreakEncountered = false;
 
 	public IfInstruction (Expr condition,ArrayList<SimpleInstruction> recursiveList) {
 		this.condition = condition;
 		this.recursiveList = recursiveList;
+
 	}
 	public void run(HashMap<String, Object> hm){
 
-		if ((Boolean)condition.run(hm)) {
+
+		if ((Boolean)condition.run(hm) && !isBreakEncountered) {
+
 			for(int i =0; i < recursiveList.size(); i++){
 				recursiveList.get(i).run(hm);
+
+				if(recursiveList.get(i) instanceof BreakInstruction){
+					isBreakEncountered = true;
+					break;
+				}
+
 			}
+
 		}
 	}
 }
+
+
 
 class IfElseIfInstruction implements IfInstructionI {
 
@@ -819,6 +931,7 @@ class IfElseIfInstruction implements IfInstructionI {
 	ArrayList<SimpleInstruction> recursiveList;
 
 	ArrayList<SimpleInstruction> recursiveList2;
+	boolean isBreakEncountered = false;
 
 	public IfElseIfInstruction (Expr condition, ArrayList<SimpleInstruction> recursiveList, ArrayList<SimpleInstruction> recursiveList2) {
 		this.condition = condition;
@@ -828,9 +941,14 @@ class IfElseIfInstruction implements IfInstructionI {
 
 	public void run(HashMap<String, Object> hm){
 
-		if ((Boolean)condition.run(hm)) {
+		if ((Boolean)condition.run(hm) && !isBreakEncountered) {
 			for(int i =0; i < recursiveList.size(); i++){
 				recursiveList.get(i).run(hm);
+				if(recursiveList.get(i) instanceof BreakInstruction){
+					isBreakEncountered = true;
+					break;
+				}
+
 			}
 		}
 		else {
@@ -847,6 +965,7 @@ class IfElseInstruction implements IfInstructionI {
 	ArrayList<SimpleInstruction> recursiveList;
 	ArrayList<Expr> boolList;
 	private ArrayList<ArrayList<SimpleInstruction>> recursiveList2;
+	boolean isBreakEncountered = false;
 
 
 	public IfElseInstruction (Expr condition1, ArrayList<SimpleInstruction> recursiveList, ArrayList<Expr> boolList, ArrayList<ArrayList<SimpleInstruction>> recursiveList2 ) {
@@ -858,17 +977,28 @@ class IfElseInstruction implements IfInstructionI {
 
 	public void run(HashMap<String, Object> hm){
 
-		if ((Boolean)condition1.run(hm)) {
+		if ((Boolean)condition1.run(hm) && !isBreakEncountered) {
 			for(int i =0; i < recursiveList.size(); i++){
 				recursiveList.get(i).run(hm);
+				if(recursiveList.get(i) instanceof BreakInstruction){ //check if the break statement is true for condition1 (eğer ise)
+					isBreakEncountered = true;
+					break; // if true, breaks the loop
+				}
 			}
 		}
 
 		else {
 			for(int i=0;i<boolList.size();i++){
 				if((Boolean)(boolList.get(i).run(hm))){
-					for (int a=0;a<recursiveList2.get(i).size();a++){
-						recursiveList2.get(i).get(a).run(hm);
+					if(!isBreakEncountered) {
+						for (int a = 0; a < recursiveList2.get(i).size(); a++) { //check if the break statement is true for condition2 (ya da ise)
+							recursiveList2.get(i).get(a).run(hm);
+							if(recursiveList2.get(i).get(a) instanceof BreakInstruction){
+								isBreakEncountered = true; // if true, breaks the loop
+								break;
+							}
+
+						}
 					}
 				}
 			}
@@ -884,6 +1014,7 @@ class ElseInstruction implements IfInstructionI {
 	ArrayList<Expr> boolList;
 	ArrayList<ArrayList<SimpleInstruction>> simpleInsList;
 	ArrayList<SimpleInstruction> recursiveList2;
+	boolean isBreakEncountered =  false;
 
 	public ElseInstruction(Expr condition1, ArrayList<SimpleInstruction> recursiveList, ArrayList<Expr> boolList, ArrayList<ArrayList<SimpleInstruction>> simpleInsList, ArrayList<SimpleInstruction> recursiveList2) {
 		this.condition1 = condition1;
@@ -897,20 +1028,30 @@ class ElseInstruction implements IfInstructionI {
 	public void run(HashMap<String, Object> hm){
 		int a = 0;
 
-		if ((Boolean)condition1.run(hm)) {
+		if ((Boolean)condition1.run(hm) && !isBreakEncountered) {
 			for(int i =0; i < recursiveList.size(); i++){
 				recursiveList.get(i).run(hm);
+				if(recursiveList.get(i) instanceof BreakInstruction){
+					isBreakEncountered = true;
+					break;
+				}
 			}
 		}
 
 		else {
 			for(int i=0;i<boolList.size();i++){
-				if((Boolean)(boolList.get(i).run(hm))){
-					for (int b=0;b<simpleInsList.get(i).size();b++){
-						simpleInsList.get(i).get(b).run(hm);
-					}
+				if((Boolean)(boolList.get(i).run(hm))) {
+					if (!isBreakEncountered){
+						for (int b = 0; b < simpleInsList.get(i).size(); b++) {
+							simpleInsList.get(i).get(b).run(hm);
+							if(simpleInsList.get(i).get(b) instanceof BreakInstruction){ //check if conditions has break statement
+								isBreakEncountered = true;
+								break;
+							}
+						}
 					a++;
 					break;
+				}
 				}
 			}
 			if(a==0) {
@@ -976,11 +1117,35 @@ class Recursive{
 		return recursiveList;
 	}
 	public void run(HashMap<String, Object> hm){
-		for (int i=0;i<recursiveList.size();i++) {
+		/*for (int i=0;i<recursiveList.size();i++) {
 			recursiveList.get(i).run(hm);
-		}
+		} */
 	}
 }
+class BreakInstruction implements SimpleInstruction
+{
+
+	public void run(HashMap<String, Object> hm)
+	{
+
+	}
+}
+
+/*
+class ContinueInstruction implements SimpleInstruction{
+	private InstructionList instructions;
+
+	public ContinueInstruction(InstructionList instructions)
+	{
+		this.instructions = instructions;
+	}
+
+	public void run(HashMap<String, Object> hm)
+	{
+
+		instructions.run(hm);
+	}
+} */
 
 class BeginEndInstruction implements SimpleInstruction
 {
@@ -996,5 +1161,3 @@ class BeginEndInstruction implements SimpleInstruction
 		instructions.run(hm);
 	}
 }
-
-

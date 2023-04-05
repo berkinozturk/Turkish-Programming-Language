@@ -19,30 +19,38 @@ başla
 	yaz("ALTTAKI SAYI COUNTER: ");
 
 	eğer (a<10 ve b<5) ise
-        yaz("EGER") +
+        yaz("EGER") sonra
         yaz("RECURSIVE")
     ya da (a<10) ise
-        yaz("yada çalıştı") +
+        yaz("yada çalıştı") sonra
         yaz("dostuum")
     ya da (b<2) ise
         yaz("yada222222 çalıştı")
     değil ise
         yaz("DEGIL");
 
-    i değişkeni 15 ile 5 arasında 3 artarken
-    eğer(i == 7) ise
-    yaz("for içi eğer")
-    ya da (s1 eşit s4) ise
-    yaz("eşiteşiteşiteşit")
+
+
+    g değişkeni 20 ile 30 arasında 1 artarken
+    yaz(g) sonra
+    eğer (g==25) ise
+    yaz("berkin")
+    ya da ( g==26) ise
+    yaz("buse")
+    ya da( g ==27) ise
+    kır
+    ya da (g == 28) ise
+    yaz("")
     değil ise
-    yaz(i);
-
-	yaz(length(s3));
-	yaz(substring(s3, 1, 3));
-	yaz(position(s3, s2));
+    yaz("bitti");
 
 
-	yaz("enter string, I will print it");
+
+
+
+
+
+	yaz("String değeri gir, aynısını basacağım");
 	yaz(readstr);
 
 	yaz("enter int, I will print it");

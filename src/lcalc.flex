@@ -64,6 +64,8 @@ STRING = \"([^\\\"]|\\.)*\"
     "readstr"         { return symbol(sym.READSTR); }
     "concatenate"     { return symbol(sym.CONCATENATE); }
     "substring"       { return symbol(sym.SUBSTRING); }
+    "devam et"        { return symbol(sym.CONTINUE); }
+    "kır"             { return symbol(sym.BREAK); }
 
     "="               {return symbol(sym.ASSIGN); }
     "=="              { return symbol(sym.EQ); }
@@ -73,6 +75,8 @@ STRING = \"([^\\\"]|\\.)*\"
     ">="              { return symbol(sym.GE); }
     "!="              { return symbol(sym.NE); }
 
+
+    "sonra"                 { return symbol(sym.SONRA); }
     "eşit"              { return symbol(sym.STREQ); }
     "eşit değil"        { return symbol(sym.STRNOTEQ); }
 
@@ -85,15 +89,15 @@ STRING = \"([^\\\"]|\\.)*\"
     "*"                { return symbol(sym.TIMES); }
     "bölümünden kalan" { return symbol(sym.MODE);  }
     "/"                { return symbol(sym.DIVIDE); }
-   
+
     {NUM}            { return symbol(sym.NUM, new Integer(yytext())); }
     {IDENT}          { return symbol(sym.IDENT, new String(yytext()));}
     {STRING}         { return symbol(sym.STRING, new String(yytext())); }
 
-    {WhiteSpace}       { /* do nothing */ }   
+    {WhiteSpace}       { /* do nothing */ }
     <<EOF>> { return symbol(sym.EOF); }
 }
 
 
-/* error */ 
+/* error */
 [^]                    { throw new Error("Illegal character <"+yytext()+">"); }
