@@ -18,37 +18,15 @@ başla
 	yaz(s3);
 	yaz("ALTTAKI SAYI COUNTER: ");
 
-	eğer (a<10 ve b<5) ise
-        yaz("EGER") sonra
-        yaz("RECURSIVE")
-    ya da (a<10) ise
-        yaz("yada çalıştı") sonra
-        yaz("dostuum")
-    ya da (b<2) ise
-        yaz("yada222222 çalıştı")
-    değil ise
-        yaz("DEGIL");
 
+    g değişkeni 20 ile 40 arasında 5 artarken
 
-
-    g değişkeni 20 ile 30 arasında 1 artarken
-    yaz(g) sonra
-    eğer (g==25) ise
-    yaz("berkin")
-    ya da ( g==26) ise
-    yaz("buse")
-    ya da( g ==27) ise
-    kır
-    ya da (g == 28) ise
-    yaz("")
-    değil ise
-    yaz("bitti");
-
-
-
-
-
-
+    eğer (g==20) ise {
+    yaz("irem") sonra
+    devam et}
+    ya da (g == 25) ise {
+    kır} sonra
+    yaz(g);
 
 	yaz("String değeri gir, aynısını basacağım");
 	yaz(readstr);

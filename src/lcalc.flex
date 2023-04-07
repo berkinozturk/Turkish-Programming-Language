@@ -74,6 +74,8 @@ STRING = \"([^\\\"]|\\.)*\"
     ">"               { return symbol(sym.GT); }
     ">="              { return symbol(sym.GE); }
     "!="              { return symbol(sym.NE); }
+    "{"               { return symbol(sym.LCURLY); }
+    "}"               { return symbol(sym.RCURLY); }
 
 
     "sonra"                 { return symbol(sym.SONRA); }
