@@ -1,20 +1,23 @@
 import java.io.*;
 import java.util.*;
+import java.lang.reflect.Array;
 
 interface Expr { Object run(HashMap<String, Object> hm); }
 interface Condition { boolean test(Expr e1, Expr e2, HashMap<String, Object> hm); }
 interface Operator { int count(Expr e1, Expr e2, HashMap<String, Object> hm); }
 
-interface SimpleInstruction { Expr run(HashMap<String,Object> hm); }
+interface SimpleInstruction { void run(HashMap<String,Object> hm); }
 
 interface WhileInstructionI extends SimpleInstruction {
-	Expr run(HashMap<String, Object> hm); }
+	void run(HashMap<String, Object> hm); }
 interface IfInstructionI extends SimpleInstruction {
-	Expr run(HashMap<String, Object> hm); }
+	void run(HashMap<String, Object> hm); }
 interface ForInstructionI extends SimpleInstruction {
-	Expr run(HashMap<String, Object> hm); }
+	void run(HashMap<String, Object> hm); }
+interface ForeachInstructionI extends SimpleInstruction {
+	void run(HashMap<String, Object> hm); }
 interface FunctionInstructionI extends SimpleInstruction {
-	Expr run(HashMap<String, Object> hm); }
+	void run(HashMap<String, Object> hm); }
 
 public class Main {
 
@@ -77,10 +80,10 @@ class AssignInstruction implements SimpleInstruction
 		val = e;
 	}
 
-	public Expr run(HashMap<String, Object> hm)
+	public void run(HashMap<String, Object> hm)
 	{
 		hm.put(name, val.run(hm));
-		return null;
+
 	}
 }
 
@@ -638,6 +641,7 @@ class ConcatStringExpression implements Expr
 			System.exit(1);
 			return null;
 		}
+
 	}
 }
 
@@ -691,10 +695,10 @@ class OutputInstruction implements SimpleInstruction
 		expr = e;
 	}
 
-	public Expr run(HashMap<String, Object> hm)
+	public void run(HashMap<String, Object> hm)
 	{
 		System.out.println(expr.run(hm));
-		return null;
+
 	}
 }
 
@@ -729,7 +733,7 @@ class WhileInstruction implements WhileInstructionI {
 		si = s;
 	}
 
-	public Expr run(HashMap<String, Object> hm) {
+	public void run(HashMap<String, Object> hm) {
 		boolean isBreakEncountered = false;
 		boolean isContinueEncountered = false;
 
@@ -777,7 +781,7 @@ class WhileInstruction implements WhileInstructionI {
 				}
 			}
 		}
-		return null;
+
 	}
 }
 
@@ -801,8 +805,7 @@ class ForInstruction implements ForInstructionI{
 	}
 
 	@Override
-	public Expr run(HashMap<String, Object> hm) {
-
+	public void run(HashMap<String, Object> hm) {
 
 		if(((Integer)e1.run(hm)).intValue()>((Integer)e2.run(hm)).intValue() ){
 			Expr e=e1;
@@ -888,7 +891,7 @@ class ForInstruction implements ForInstructionI{
 
 		}
 
-		return null;
+
 	}
 }
 class ForInstruction2 implements ForInstructionI{
@@ -911,7 +914,7 @@ class ForInstruction2 implements ForInstructionI{
 	}
 
 	@Override
-	public Expr run(HashMap<String, Object> hm) {
+	public void run(HashMap<String, Object> hm) {
 
 
 		if(((Integer)e1.run(hm)).intValue()>((Integer)e2.run(hm)).intValue()){
@@ -994,9 +997,55 @@ class ForInstruction2 implements ForInstructionI{
 			i -= ((Integer)e3.run(hm)).intValue();
 		}
 
-		return null;
+
 	}
 }
+
+class ForeachInstruction implements ForeachInstructionI{
+
+	Expr e;
+	String ident;
+	private List<SimpleInstruction> recursiveList;
+
+	public ForeachInstruction(Expr e, String ident, List<SimpleInstruction> recursiveList) {
+		this.ident = ident;
+		this.e = e;
+		this.recursiveList = recursiveList;
+	}
+
+	@Override
+	public void run(HashMap<String, Object> hm) {
+
+		Object list = e.run(hm);
+		ArrayList<Object> listA;
+
+		if(list instanceof ArrayList){
+			listA = (ArrayList<Object>) list;
+		}
+		else if(list.getClass().isArray()) {
+			listA = new ArrayList<>();
+			int length = Array.getLength(list);
+			for(int i = 0; i < length; i++) {
+				listA.add(Array.get(list, i));
+			}
+		}
+		else {
+			System.out.println("Error: wrong object type");
+			System.exit(1);
+			return;
+		}
+
+		for (Object i: listA) {
+			hm.put(ident, i);
+			for(int j = 0; j < recursiveList.size(); j++){
+				recursiveList.get(j).run(hm);
+			}
+		}
+	}
+}
+
+
+
 class IfInstruction implements IfInstructionI {
 
 	Expr condition;
@@ -1009,8 +1058,7 @@ class IfInstruction implements IfInstructionI {
 		this.recursiveList = recursiveList;
 
 	}
-	public Expr run(HashMap<String, Object> hm){
-
+	public void run(HashMap<String, Object> hm){
 
 		if ((Boolean)condition.run(hm) && (!isBreakEncountered || !isContinueEncountered)) {
 
@@ -1027,7 +1075,7 @@ class IfInstruction implements IfInstructionI {
 				}
 			}
 		}
-		return null;
+
 	}
 }
 
@@ -1047,7 +1095,7 @@ class IfElseIfInstruction implements IfInstructionI {
 		this.recursiveList2 = recursiveList2;
 	}
 
-	public Expr run(HashMap<String, Object> hm){
+	public void run(HashMap<String, Object> hm){
 
 		if ((Boolean)condition.run(hm) && (!isBreakEncountered || !isContinueEncountered)) {
 			for(int i =0; i < recursiveList.size(); i++){
@@ -1068,7 +1116,7 @@ class IfElseIfInstruction implements IfInstructionI {
 				recursiveList2.get(i).run(hm);
 			}
 		}
-		return null;
+
 	}
 }
 
@@ -1088,7 +1136,7 @@ class IfElseInstruction implements IfInstructionI {
 		this.recursiveList2 = recursiveList2;
 	}
 
-	public Expr run(HashMap<String, Object> hm){
+	public void run(HashMap<String, Object> hm){
 
 		if ((Boolean)condition1.run(hm) && (!isBreakEncountered || !isContinueEncountered)) {
 			for(int i =0; i < recursiveList.size(); i++){
@@ -1129,7 +1177,7 @@ class IfElseInstruction implements IfInstructionI {
 				}
 			}
 		}
-		return null;
+
 	}
 }
 
@@ -1153,7 +1201,7 @@ class ElseInstruction implements IfInstructionI {
 	}
 
 
-	public Expr run(HashMap<String, Object> hm){
+	public void run(HashMap<String, Object> hm){
 		int a = 0;
 
 		if ((Boolean)condition1.run(hm) && (!isBreakEncountered || !isContinueEncountered)) {
@@ -1203,7 +1251,7 @@ class ElseInstruction implements IfInstructionI {
 				}
 			}
 		}
-		return null;
+
 	}
 }
 
@@ -1246,6 +1294,8 @@ class ElseIfContent{
 	}
 
 }
+
+
 class Recursive{
 	private ArrayList<SimpleInstruction> recursiveList;
 	public Recursive(SimpleInstruction ins){
@@ -1291,19 +1341,19 @@ class RecursiveID{
 class BreakInstruction implements SimpleInstruction
 {
 
-	public Expr run(HashMap<String, Object> hm)
+	public void run(HashMap<String, Object> hm)
 	{
 
-		return null;
+
 	}
 }
 
 class ContinueInstruction implements SimpleInstruction{
 
 	@Override
-	public Expr run(HashMap<String, Object> hm) {
+	public void run(HashMap<String, Object> hm) {
 
-		return null;
+
 	}
 }
 
@@ -1341,7 +1391,7 @@ class FunctionInstruction implements FunctionInstructionI {
 	}
 
 	@Override
-	public Expr run(HashMap<String, Object> hm) {
+	public void run(HashMap<String, Object> hm) {
 
 		for (Expr si : recursiveID) {
 			si.run(hm);
@@ -1355,10 +1405,10 @@ class FunctionInstruction implements FunctionInstructionI {
 			if (recursiveID.contains("döndür")) {
 				Expr returnValue = recursiveID.get(i);
 				recursiveID.remove("döndür");
-				return returnValue;
+
 			}
 		}
-		return null;
+
 	}
 
 	// Getters for the function name and parameter names
@@ -1382,9 +1432,9 @@ class FunctionInstruction implements FunctionInstructionI {
 			this.instructions = instructions;
 		}
 
-		public Expr run(HashMap<String, Object> hm) {
+		public void run(HashMap<String, Object> hm) {
 			instructions.run(hm);
-			return null;
+
 		}
 	}
 

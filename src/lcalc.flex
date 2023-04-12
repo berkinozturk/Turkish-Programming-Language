@@ -57,6 +57,10 @@ STRING = \"([^\\\"]|\\.)*\"
     "işi"             { return symbol(sym.FUNCTION); }
     "döndür"          { return symbol(sym.RETURN); }
 
+    "içindeki"        { return symbol(sym.INSIDE); }
+    "her"             { return symbol(sym.EVERY); }
+    "değeri"          { return symbol(sym.VALUE); }
+    "için"            { return symbol(sym.FOR); }
 
     "yaz"             { return symbol(sym.YAZ); }
     "liste"           { return symbol(sym.LISTE); }
