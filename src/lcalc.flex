@@ -53,7 +53,9 @@ STRING = \"([^\\\"]|\\.)*\"
     "ile"             { return symbol(sym.ILE); }
     "arasında"        { return symbol(sym.ARASINDA); }
     "artarken"        { return symbol(sym.ART); }
-    "azalırken"        { return symbol(sym.AZ); }
+    "azalırken"       { return symbol(sym.AZ); }
+    "işi"             { return symbol(sym.FUNCTION); }
+    "döndür"          { return symbol(sym.RETURN); }
 
 
     "yaz"             { return symbol(sym.YAZ); }

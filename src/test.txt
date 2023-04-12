@@ -20,7 +20,6 @@ başla
 
 
     g değişkeni 20 ile 40 arasında 5 artarken
-
     eğer (g==20) ise {
     yaz("irem") sonra
     devam et}
@@ -28,8 +27,27 @@ başla
     kır} sonra
     yaz(g);
 
+    x=10;
+          (x<20) olduğu sürece
+          x = x+1 sonra
+          eğer (x==15) ise{
+          yaz("kır calıstı") sonra
+           devam et}
+          ya da(x==17) ise{
+          kır sonra
+          yaz (x)};
+
+         a,b ile topla işi{
+         sonuc = a + b sonra
+         yaz (sonuc);
+         sonuc döndür };
+
+
+
+
 	yaz("String değeri gir, aynısını basacağım");
 	yaz(readstr);
+
 
 	yaz("enter int, I will print it");
 	yaz(readint)

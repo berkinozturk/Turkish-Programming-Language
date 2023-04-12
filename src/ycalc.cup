@@ -34,6 +34,7 @@ terminal           EGER, ISE, DEGIL, YADA; //eğer, ise, ya da eklendi
 terminal           WHILE;
 terminal           DEGIS, ILE, ARASINDA;
 terminal           CONTINUE, BREAK, LCURLY, RCURLY;
+terminal           FUNCTION, RETURN;
 
 terminal           YAZ, READINT, LENGTH, POSITION, READSTR, CONCATENATE, SUBSTRING, LIST;  // commands
 terminal           ASSIGN;
@@ -55,6 +56,9 @@ non terminal Expr str_expr;
 non terminal Expr bool_expr;
 non terminal Expr list_stat;
 non terminal Expr expr_list;
+non terminal Expr function_name;
+non terminal Expr return_function;
+
 
 
 non terminal Operator num_op;
@@ -73,8 +77,10 @@ non terminal SimpleInstruction if_stat;
 non terminal SimpleInstruction while_stat;
 non terminal SimpleInstruction for_stat;
 non terminal SimpleInstruction output_stat;
+non terminal SimpleInstruction function_stat;
 non terminal Main program;
 non terminal Recursive recursive;
+non terminal RecursiveID recursive_id;
 
 /** Precedence */
 precedence left PLUS, MINUS;
@@ -189,6 +195,9 @@ simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | continue_stat:si                 {: RESULT = si; :}
               | while_stat:si                    {: RESULT = si; :}
               | for_stat:si                      {: RESULT = si; :}
+              | function_stat:si                 {: RESULT = si; :}
+
+
               | BEGIN instr:si END               {: RESULT = new BeginEndInstruction(si); :}
               | output_stat:si                   {: RESULT = si; :}
               | EXIT                             {: System.exit(0); :}
@@ -219,6 +228,7 @@ for_stat::= IDENT:i DEGIS expr:e ILE expr:e2 ARASINDA expr:e3 ART recursive:s {:
            |IDENT:i DEGIS expr:e ILE expr:e2 ARASINDA expr:e3 AZ recursive:s  {: RESULT = new ForInstruction2(i,e,e2,e3,s.getSimplein()); :}
             ;
 
+
 while_stat ::= LPAREN bool_expr:c RPAREN WHILE recursive:s       {: RESULT = new WhileInstruction(c, s.getSimplein()); :}
             ;
 
@@ -227,8 +237,22 @@ output_stat ::= YAZ LPAREN expr:e  RPAREN               {: RESULT = new OutputIn
 
 break_stat::= BREAK {: RESULT = new BreakInstruction(); :}
             ;
+
 continue_stat::= CONTINUE {: RESULT = new ContinueInstruction(); :}
             ;
+
+function_stat::=  recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI return_function:r RCURLY {: RESULT = new FunctionInstruction(i.getSimplein() , e , si.getSimplein(), r ); :}
+            ;
+
+recursive_id ::=  recursive_id:a  COMMA   expr:e      {: a.add(e); RESULT = a;:} //sonsuz expr
+                        | expr:e      {: RESULT = new RecursiveID(e);:} ;
+
+
+return_function::= expr:e RETURN {: RESULT = new ReturnInstruction(e); :}
+            ;
+
+// call_function ::= recursive_id:e ILE IDENT:i {: RESULT = new ReturnInstruction(e); :} // 3,4 ile function name
+           // ;
 
 program ::= instr:i
           {:

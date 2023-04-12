@@ -1,18 +1,20 @@
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 interface Expr { Object run(HashMap<String, Object> hm); }
 interface Condition { boolean test(Expr e1, Expr e2, HashMap<String, Object> hm); }
 interface Operator { int count(Expr e1, Expr e2, HashMap<String, Object> hm); }
 
-interface SimpleInstruction { void run(HashMap<String,Object> hm); }
+interface SimpleInstruction { Expr run(HashMap<String,Object> hm); }
 
-interface WhileInstructionI extends SimpleInstruction {void run(HashMap<String, Object> hm); }
-interface IfInstructionI extends SimpleInstruction {void run(HashMap<String, Object> hm); }
-interface ForInstructionI extends SimpleInstruction {void run(HashMap<String, Object> hm); }
+interface WhileInstructionI extends SimpleInstruction {
+	Expr run(HashMap<String, Object> hm); }
+interface IfInstructionI extends SimpleInstruction {
+	Expr run(HashMap<String, Object> hm); }
+interface ForInstructionI extends SimpleInstruction {
+	Expr run(HashMap<String, Object> hm); }
+interface FunctionInstructionI extends SimpleInstruction {
+	Expr run(HashMap<String, Object> hm); }
 
 public class Main {
 
@@ -54,6 +56,14 @@ class ID implements Expr
 	{
 		return hm.get(name);
 	}
+
+	public String getId() {
+		return name;
+	}
+
+	public void setId(String name) {
+		this.name = name;
+	}
 }
 
 class AssignInstruction implements SimpleInstruction
@@ -67,9 +77,10 @@ class AssignInstruction implements SimpleInstruction
 		val = e;
 	}
 
-	public void run(HashMap<String, Object> hm)
+	public Expr run(HashMap<String, Object> hm)
 	{
 		hm.put(name, val.run(hm));
+		return null;
 	}
 }
 
@@ -680,9 +691,10 @@ class OutputInstruction implements SimpleInstruction
 		expr = e;
 	}
 
-	public void run(HashMap<String, Object> hm)
+	public Expr run(HashMap<String, Object> hm)
 	{
 		System.out.println(expr.run(hm));
+		return null;
 	}
 }
 
@@ -717,7 +729,7 @@ class WhileInstruction implements WhileInstructionI {
 		si = s;
 	}
 
-	public void run(HashMap<String, Object> hm) {
+	public Expr run(HashMap<String, Object> hm) {
 		boolean isBreakEncountered = false;
 		boolean isContinueEncountered = false;
 
@@ -765,6 +777,7 @@ class WhileInstruction implements WhileInstructionI {
 				}
 			}
 		}
+		return null;
 	}
 }
 
@@ -788,8 +801,7 @@ class ForInstruction implements ForInstructionI{
 	}
 
 	@Override
-	public void run(HashMap<String, Object> hm) {
-
+	public Expr run(HashMap<String, Object> hm) {
 
 
 		if(((Integer)e1.run(hm)).intValue()>((Integer)e2.run(hm)).intValue() ){
@@ -876,6 +888,7 @@ class ForInstruction implements ForInstructionI{
 
 		}
 
+		return null;
 	}
 }
 class ForInstruction2 implements ForInstructionI{
@@ -898,7 +911,7 @@ class ForInstruction2 implements ForInstructionI{
 	}
 
 	@Override
-	public void run(HashMap<String, Object> hm) {
+	public Expr run(HashMap<String, Object> hm) {
 
 
 		if(((Integer)e1.run(hm)).intValue()>((Integer)e2.run(hm)).intValue()){
@@ -981,6 +994,7 @@ class ForInstruction2 implements ForInstructionI{
 			i -= ((Integer)e3.run(hm)).intValue();
 		}
 
+		return null;
 	}
 }
 class IfInstruction implements IfInstructionI {
@@ -995,7 +1009,7 @@ class IfInstruction implements IfInstructionI {
 		this.recursiveList = recursiveList;
 
 	}
-	public void run(HashMap<String, Object> hm){
+	public Expr run(HashMap<String, Object> hm){
 
 
 		if ((Boolean)condition.run(hm) && (!isBreakEncountered || !isContinueEncountered)) {
@@ -1013,6 +1027,7 @@ class IfInstruction implements IfInstructionI {
 				}
 			}
 		}
+		return null;
 	}
 }
 
@@ -1032,7 +1047,7 @@ class IfElseIfInstruction implements IfInstructionI {
 		this.recursiveList2 = recursiveList2;
 	}
 
-	public void run(HashMap<String, Object> hm){
+	public Expr run(HashMap<String, Object> hm){
 
 		if ((Boolean)condition.run(hm) && (!isBreakEncountered || !isContinueEncountered)) {
 			for(int i =0; i < recursiveList.size(); i++){
@@ -1053,6 +1068,7 @@ class IfElseIfInstruction implements IfInstructionI {
 				recursiveList2.get(i).run(hm);
 			}
 		}
+		return null;
 	}
 }
 
@@ -1072,7 +1088,7 @@ class IfElseInstruction implements IfInstructionI {
 		this.recursiveList2 = recursiveList2;
 	}
 
-	public void run(HashMap<String, Object> hm){
+	public Expr run(HashMap<String, Object> hm){
 
 		if ((Boolean)condition1.run(hm) && (!isBreakEncountered || !isContinueEncountered)) {
 			for(int i =0; i < recursiveList.size(); i++){
@@ -1113,6 +1129,7 @@ class IfElseInstruction implements IfInstructionI {
 				}
 			}
 		}
+		return null;
 	}
 }
 
@@ -1136,7 +1153,7 @@ class ElseInstruction implements IfInstructionI {
 	}
 
 
-	public void run(HashMap<String, Object> hm){
+	public Expr run(HashMap<String, Object> hm){
 		int a = 0;
 
 		if ((Boolean)condition1.run(hm) && (!isBreakEncountered || !isContinueEncountered)) {
@@ -1164,9 +1181,9 @@ class ElseInstruction implements IfInstructionI {
 								break;
 							}
 						}
-					a++;
-					break;
-				}
+						a++;
+						break;
+					}
 					if (!isContinueEncountered) {
 						for (int b = 0; b < simpleInsList.get(i).size(); b++) {
 							simpleInsList.get(i).get(b).run(hm);
@@ -1186,6 +1203,7 @@ class ElseInstruction implements IfInstructionI {
 				}
 			}
 		}
+		return null;
 	}
 }
 
@@ -1248,34 +1266,126 @@ class Recursive{
 		} */
 	}
 }
+
+class RecursiveID{
+	private ArrayList<Expr> recursiveList;
+	public RecursiveID(Expr ins){
+
+		recursiveList = new ArrayList<Expr>();
+		recursiveList.add(ins);
+	}
+	public void add(Expr ins) {
+		recursiveList.add(ins);
+	}
+	public ArrayList<Expr> getSimplein() {
+
+		return recursiveList;
+	}
+	public void run(HashMap<String, Object> hm){
+		/*for (int i=0;i<recursiveList.size();i++) {
+			recursiveList.get(i).run(hm);
+		} */
+	}
+}
+
 class BreakInstruction implements SimpleInstruction
 {
 
-	public void run(HashMap<String, Object> hm)
+	public Expr run(HashMap<String, Object> hm)
 	{
 
+		return null;
 	}
 }
 
 class ContinueInstruction implements SimpleInstruction{
 
 	@Override
-	public void run(HashMap<String, Object> hm) {
+	public Expr run(HashMap<String, Object> hm) {
 
+		return null;
 	}
 }
 
-class BeginEndInstruction implements SimpleInstruction
-{
-	private InstructionList instructions;
+class ReturnInstruction implements Expr {
 
-	public BeginEndInstruction(InstructionList instructions)
-	{
-		this.instructions = instructions;
+	private Expr expr;
+
+	public ReturnInstruction(Expr expr) {
+		this.expr = expr;
 	}
-
-	public void run(HashMap<String, Object> hm)
+	public Expr getReturn(){
+		return expr;
+	}
+	public Object run(HashMap<String,Object> hm)
 	{
-		instructions.run(hm);
+		return hm.get(expr);
 	}
 }
+
+
+class FunctionInstruction implements FunctionInstructionI {
+
+	private String functionname;
+
+	private List<SimpleInstruction> recursiveList;
+	private ArrayList<Expr> recursiveID;
+	private Expr ret;
+
+	public FunctionInstruction(ArrayList<Expr> recursiveID, String functionname, ArrayList<SimpleInstruction> recursiveList, Expr ret) {
+		this.functionname = functionname;
+		this.recursiveList = recursiveList;
+		this.recursiveID = recursiveID;
+
+		this.ret = ret;
+	}
+
+	@Override
+	public Expr run(HashMap<String, Object> hm) {
+
+		for (Expr si : recursiveID) {
+			si.run(hm);
+		}
+
+		// Execute the function's body
+		for (int i = 0; i < recursiveList.size(); i++) {
+			recursiveID.get(i).run(hm);
+
+			// Check if the function should return
+			if (recursiveID.contains("döndür")) {
+				Expr returnValue = recursiveID.get(i);
+				recursiveID.remove("döndür");
+				return returnValue;
+			}
+		}
+		return null;
+	}
+
+	// Getters for the function name and parameter names
+	public String getFunctionName() {
+		return functionname;
+	}
+
+	public void add(Expr expr) {
+		recursiveID.add(expr);
+	}
+
+	public ArrayList<Expr> getExpr() {
+		return recursiveID;
+	}
+
+}
+	class BeginEndInstruction implements SimpleInstruction {
+		private InstructionList instructions;
+
+		public BeginEndInstruction(InstructionList instructions) {
+			this.instructions = instructions;
+		}
+
+		public Expr run(HashMap<String, Object> hm) {
+			instructions.run(hm);
+			return null;
+		}
+	}
+
+
