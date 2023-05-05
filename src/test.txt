@@ -42,10 +42,14 @@ yaz(i);
           kır sonra
           yaz (x)};
 
+
          a,b ile topla işi{
-         sonuc = a + b sonra
-         yaz (sonuc);
-         sonuc döndür };
+         sonuc = a+b+7 sonra
+          yaz (sonuc);
+        sonuc döndür
+         };
+
+3,4 ile topla;
 
 
 

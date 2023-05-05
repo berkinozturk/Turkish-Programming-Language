@@ -248,18 +248,19 @@ break_stat::= BREAK {: RESULT = new BreakInstruction(); :}
 continue_stat::= CONTINUE {: RESULT = new ContinueInstruction(); :}
             ;
 
-function_stat::=  recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI return_function:r RCURLY {: RESULT = new FunctionInstruction(i.getSimplein() , e , si.getSimplein(), r ); :}
+function_stat::=  recursive_id:i ILE expr:e FUNCTION LCURLY recursive:si SEMI return_function:r RCURLY {: RESULT = new FunctionInstruction(i.getRecursiveID() , e , si.getSimplein(), r ); :}
             ;
 
 recursive_id ::=  recursive_id:a  COMMA   expr:e      {: a.add(e); RESULT = a;:} //sonsuz expr
-                        | expr:e      {: RESULT = new RecursiveID(e);:} ;
+                 | expr:e      {: RESULT = new RecursiveID(e);:} ;
 
 
 return_function::= expr:e RETURN {: RESULT = new ReturnInstruction(e); :}
             ;
 
-//call_function ::= recursive_id:e ILE IDENT:i {: RESULT = new ReturnInstruction(e); :} // 3,4 ile function name
-       //     ;
+call_function ::= recursive_id:e ILE expr:i
+                  {: RESULT = new CallFunction(i, e.getRecursiveID()); :}
+                  ;
 
 program ::= instr:i
           {:
