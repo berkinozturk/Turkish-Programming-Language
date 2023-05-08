@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #compile
-jflex-1.6.1/bin/jflex lcalc.flex;
-java -cp .:java-cup-11b.jar java_cup.Main  < ycalc.cup;
-javac -cp .:java-cup-11b.jar Main.java;
+jflex-1.6.1/bin/jflex _lcalc.flex;
+java -cp .:java-cup-11b.jar java_cup.Main  < _ycalc.cup;
+javac -cp .:java-cup-11b.jar _Main.java;
 
 #run
 java -cp .:java-cup-11b-runtime.jar Main test.txt;

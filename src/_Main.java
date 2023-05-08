@@ -15,7 +15,7 @@ interface IfInstructionI extends SimpleInstruction {
 interface ForInstructionI extends SimpleInstruction {
 	void run(HashMap<String, Object> hm); }
 interface ForeachInstructionI extends SimpleInstruction {
-	void run(HashMap<String, Object> hm); }
+void run(HashMap<String, Object> hm); }
 interface FunctionInstructionI extends SimpleInstruction {
 	void run(HashMap<String, Object> hm); }
 
@@ -44,7 +44,6 @@ public class Main {
 	}
 
 }
-
 
 /** VARS */
 class ID implements Expr
@@ -1037,7 +1036,6 @@ class ForeachInstruction implements ForeachInstructionI{
 		}
 
 		for (Object i: listA) {
-
 			hm.put(ident, i);
 			for(int j = 0; j < recursiveList.size(); j++){
 				recursiveList.get(j).run(hm);
@@ -1299,7 +1297,6 @@ class ElseIfContent{
 
 
 class Recursive{
-
 	private ArrayList<SimpleInstruction> recursiveList;
 	public Recursive(SimpleInstruction ins){
 
@@ -1310,10 +1307,13 @@ class Recursive{
 		recursiveList.add(ins);
 	}
 	public ArrayList<SimpleInstruction> getSimplein() {
+
 		return recursiveList;
 	}
 	public void run(HashMap<String, Object> hm){
-
+		/*for (int i=0;i<recursiveList.size();i++) {
+			recursiveList.get(i).run(hm);
+		} */
 	}
 }
 
@@ -1332,7 +1332,9 @@ class RecursiveID{
 		return recursiveID;
 	}
 	public void run(HashMap<String, Object> hm){
-
+		/*for (int i=0;i<recursiveList.size();i++) {
+			recursiveList.get(i).run(hm);
+		} */
 	}
 }
 
@@ -1375,11 +1377,11 @@ class ReturnInstruction implements Expr {
 class FunctionInstruction implements FunctionInstructionI {
 
 	private ArrayList<Expr> recursiveID;
-	private String functionName;
+	private Expr functionName;
 	private List<SimpleInstruction> recursiveList;
 	private Expr ret;
 
-	public FunctionInstruction(ArrayList<Expr> recursiveID, String functionName, ArrayList<SimpleInstruction> recursiveList, Expr ret) {
+	public FunctionInstruction(ArrayList<Expr> recursiveID, Expr functionName, ArrayList<SimpleInstruction> recursiveList, Expr ret) {
 		this.functionName = functionName;
 		this.recursiveList = recursiveList;
 		this.recursiveID = recursiveID;
@@ -1389,44 +1391,47 @@ class FunctionInstruction implements FunctionInstructionI {
 	@Override
 	public void run(HashMap<String, Object> hm) {
 
-		ArrayList<Object> object= new ArrayList<>();
-		ArrayList<String> objectID= new ArrayList<>();
+		hm.put((String) functionName.run(hm),recursiveID);
 
+		for (Expr si : recursiveID) {
+			si.run(hm);
+		}
 
-		for(int i = 0; i < recursiveID.size(); i++){
-			Expr expr = recursiveID.get(i);
-			if (expr instanceof ID) {
-				ID idExpr = (ID) expr;
-				String identifier = idExpr.getId();
-				//System.out.println("Identifier: " + identifier);
-				objectID.add(identifier);
+		// Execute the function's body
+		for (int i = 0; i < recursiveList.size(); i++) {
+			recursiveID.get(i).run(hm);
+
+			// Check if the function should return
+			if (recursiveID.contains("döndür")) {
+				Expr returnValue = recursiveID.get(i);
+				recursiveID.remove("döndür");
+
 			}
 		}
 
-		object.add(objectID);
-		object.add(recursiveList);
-
-		hm.put(functionName,object);
 	}
 
 	// Getters for the function name and parameter names
+	public Expr getFunctionName() {
+		return functionName;
+	}
 
 	public void add(Expr expr) {
 		recursiveID.add(expr);
 	}
+
 	public ArrayList<Expr> getExpr() {
 		return recursiveID;
 	}
 
 }
 
-
 class CallFunction implements FunctionInstructionI {
 
-	private String functionName;
+	private Expr functionName;
 	private ArrayList<Expr> recursiveID;
 
-	CallFunction(String functionName, ArrayList<Expr> recursiveID) {
+	CallFunction(Expr functionName, ArrayList<Expr> recursiveID) {
 		this.functionName = functionName;
 		this.recursiveID = recursiveID;
 	}
@@ -1434,69 +1439,23 @@ class CallFunction implements FunctionInstructionI {
 	@Override
 	public void run(HashMap<String, Object> hm) {
 
-		Object function = hm.get(functionName);
-		ArrayList<Object> listA = new ArrayList<Object>();
-		ArrayList<String> listParam = null;
-		ArrayList<SimpleInstruction> listInstruction = new ArrayList<>();
+		FunctionInstruction function;
+		function=hm.get(functionName.run(hm));
 
 		if (function == null) {
 			throw new RuntimeException("Tanımlanamayan fonksiyon: " + functionName);
 		}
 
-		if(function instanceof ArrayList){
-			listA = (ArrayList<Object>) function;
+		ArrayList<Expr> parameterNames = function.getExpr();
+		if (parameterNames.size() != recursiveID.size()) {
+			throw new RuntimeException("Function " + functionName + " expects " +
+					parameterNames.size() + " arguments but " +
+					recursiveID.size() + " were given.");
 		}
-		else if(function.getClass().isArray()) {
-			listA = new ArrayList<>();
-			int length = Array.getLength(function);
-			for(int i = 0; i < length; i++) {
-				listA.add(Array.get(function, i));
-			}
+		for (int i = 0; i < parameterNames.size(); i++) {
+			hm.put(parameterNames.get(i).toString(), recursiveID.get(i).run(hm));
 		}
-
-		/** burası parametre **/
-		if(listA.get(0) instanceof ArrayList){
-
-			ArrayList<?> tempList = (ArrayList<?>) listA.get(0);
-			listParam = new ArrayList<String>();
-
-			for (Object obj : tempList) {
-				if (obj instanceof String) {
-					//System.out.println("girdi");
-					listParam.add((String) obj);
-				}
-			}
-		}
-
-		/** burası simpleinstruction **/
-
-		if(listA.get(1) instanceof ArrayList){
-
-			ArrayList<?> tempList = (ArrayList<?>) listA.get(1);
-			listInstruction = new ArrayList<SimpleInstruction>();
-
-			for (Object obj : tempList) {
-				if (obj instanceof SimpleInstruction) {
-					listInstruction.add((SimpleInstruction) obj);
-				}
-			}
-		}
-
-
-		/** burası çalıştırmak için function'ı comment kısımları sadece çalışıyor mu diye bakmak için **/
-
-		for(int i = 0 ; i < listParam.size(); i++){
-			//System.out.println("LIST PARAMETRE");
-			//System.out.println(functionName);
-			//System.out.println("BURASI recursive id " + recursiveID.get(i).run(hm));
-			//System.out.println("BURASI listParam id " +listParam.get(i));
-			hm.put(listParam.get(i), recursiveID.get(i).run(hm));
-		}
-
-		for (SimpleInstruction i : listInstruction){
-			i.run(hm);
-		}
-
+		function.run(hm);
 	}
 }
 
@@ -1513,5 +1472,3 @@ class BeginEndInstruction implements SimpleInstruction {
 
 	}
 }
-
-
