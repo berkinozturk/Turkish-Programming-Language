@@ -26,24 +26,17 @@ parser code {:
 
 /** Terminals */
 
-terminal           AND, OR, NOT, TRUE, FALSE, SONRA; // boolean
+terminal           AND, OR, NOT, TRUE, FALSE; // boolean
 
 // flow
-terminal           BEGIN, END, EXIT;
+terminal           BEGIN, END, EXIT; 
 terminal           EGER, ISE, DEGIL, YADA; //eğer, ise, ya da eklendi
-terminal           WHILE;
-terminal           DEGIS, ILE, ARASINDA;
+terminal           WHILE, DO; 
 
-terminal           INSIDE, EVERY, FOR, VALUE;  //foreach loop için
-
-terminal           CONTINUE, BREAK, LCURLY, RCURLY;
-terminal           FUNCTION, RETURN;
-
-terminal           YAZ, READINT, LENGTH, POSITION, READSTR, CONCATENATE, SUBSTRING, LIST;  // commands
-terminal           ASSIGN;
+terminal           YAZ, READINT, LENGTH, POSITION, READSTR, CONCATENATE, SUBSTRING;  // commands
+terminal           ASSIGN; 
 terminal   	       EQ, LT, LE, GT, GE, NE; // num_rel
 terminal    	   STREQ, STRNOTEQ; //str_rel
-terminal    	   ART,AZ;
 
 terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MODE, LPAREN, RPAREN;
 terminal Integer   NUM;
@@ -58,9 +51,7 @@ non terminal Expr num_expr;
 non terminal Expr str_expr;
 non terminal Expr bool_expr;
 non terminal Expr list_stat;
-non terminal Expr expr_list;
-non terminal Expr function_name;
-non terminal Expr return_function;
+non terminal Expr aaaa;
 
 non terminal Operator num_op;
 non terminal Condition num_rel;
@@ -68,32 +59,25 @@ non terminal Condition str_rel;
 
 non terminal SimpleInstruction simple_instr;
 non terminal InstructionList instr;
-non terminal ListContent list_content;
-non terminal ElseIfContent if_content;
-non terminal SimpleInstruction break_stat;
-non terminal SimpleInstruction continue_stat;
 
 non terminal SimpleInstruction assign_stat;
 non terminal SimpleInstruction if_stat;
 non terminal SimpleInstruction while_stat;
-non terminal SimpleInstruction for_stat;
-non terminal SimpleInstruction foreach_stat;
 non terminal SimpleInstruction output_stat;
-non terminal SimpleInstruction function_stat;
-non terminal SimpleInstruction call_function;
 non terminal Main program;
-non terminal Recursive recursive;
-non terminal RecursiveID recursive_id;
 
 /** Precedence */
 precedence left PLUS, MINUS;
-precedence left TIMES, DIVIDE, MODE;
+precedence left TIMES, DIVIDE, MODE; 
 
-precedence left OR, AND, SONRA;
+precedence left OR, AND;
 precedence left NOT;
+
 
 precedence left DEGIL;
 precedence left YADA;
+
+
 
 start with program;
 
@@ -110,17 +94,8 @@ num_op ::= PLUS             {: RESULT = new PlusOperator(); :}
 expr ::= IDENT:i            {: RESULT = new ID(i); :}
             |num_expr:e     {: RESULT = e; :}
             |str_expr:e     {: RESULT = e; :}
-            |list_stat:e    {: RESULT = e; :}
+            |list_stat:e     {: RESULT = e; :}
             ;
-
-list_content ::=  list_content:a  COMMA   expr:e      {: a.add(e); RESULT = a;:}
-                        | expr:e      {: RESULT = new ListContent(e);:} ;
-
-list_stat ::= LIST LPAREN list_content:e RPAREN {:
-    RESULT = new ListExpr(e.getExpr());
-:};
-
-
 
 num_expr ::=  NUM:e
                 {:
@@ -178,9 +153,9 @@ num_rel ::=   EQ         {: RESULT = new EqCond(); :}
             | NE         {: RESULT = new NeCond(); :}
             ;
 
-str_rel ::= STREQ     {: RESULT = new EqCond(); :}
+str_rel ::= STREQ     {: RESULT = new StrEqCond(); :}
           | STRNOTEQ  {: RESULT = new StrNotEqCond(); :}
-          ;
+          ; 
 
 bool_expr ::= TRUE                               {: RESULT = new BooleanExpression(true); :}
             | FALSE                              {: RESULT = new BooleanExpression(false); :}
@@ -194,13 +169,7 @@ bool_expr ::= TRUE                               {: RESULT = new BooleanExpressi
 
 simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | if_stat:si                       {: RESULT = si; :}
-              | break_stat:si                    {: RESULT = si; :}
-              | continue_stat:si                 {: RESULT = si; :}
               | while_stat:si                    {: RESULT = si; :}
-              | for_stat:si                      {: RESULT = si; :}
-              | foreach_stat:si                  {: RESULT = si; :}
-              | function_stat:si                 {: RESULT = si; :}
-              | call_function:si                 {: RESULT = si; :}
               | BEGIN instr:si END               {: RESULT = new BeginEndInstruction(si); :}
               | output_stat:si                   {: RESULT = si; :}
               | EXIT                             {: System.exit(0); :}
@@ -210,54 +179,43 @@ instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
         | simple_instr:si                        {: RESULT = new InstructionList(si); :}
         ;
 
-assign_stat ::= IDENT:i ASSIGN expr:e            {: RESULT = new AssignInstruction(i,e); :}
-        ;
+assign_stat ::= IDENT:i ASSIGN expr:e          {: RESULT = new AssignInstruction(i,e); :}
+                ;
 
-recursive::= recursive:i SONRA simple_instr:si    {: i.add(si); RESULT = i; :}
-           | simple_instr:si                     {: RESULT = new Recursive(si); :}
-          ;
+if_stat ::= EGER bool_expr:c ISE  simple_instr:s    {: RESULT = new IfInstruction(c, s); :}
 
-if_stat ::= EGER bool_expr:c ISE LCURLY recursive:s RCURLY   {: RESULT = new IfInstruction(c, s.getSimplein()); :}
-          | EGER bool_expr:c ISE LCURLY recursive:s RCURLY DEGIL ISE  LCURLY recursive:s2   RCURLY   {: RESULT = new IfElseIfInstruction(c, s.getSimplein(), s2.getSimplein()); :}
-          | EGER bool_expr:c ISE LCURLY recursive:s RCURLY if_content:cont  {: RESULT = new IfElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList()); :}
-          | EGER bool_expr:c ISE LCURLY recursive:s RCURLY if_content:cont DEGIL ISE LCURLY recursive:s3 RCURLY  {:  RESULT = new ElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList(), s3.getSimplein()); :}
-          ;
+          | EGER bool_expr:c ISE  simple_instr:s YADA bool_expr:c2 ISE simple_instr:s2  {:  RESULT = new IfElseInstruction(c, s, c2, s2); :}
 
-if_content ::= if_content:cont YADA bool_expr:c2 ISE LCURLY recursive:s2 RCURLY  {:cont.add(c2,s2.getSimplein()); RESULT = cont;:}
-            |   YADA bool_expr:c2 ISE LCURLY recursive:s2 RCURLY {: RESULT = new ElseIfContent(c2, s2.getSimplein()); :}
+
+          | EGER bool_expr:c ISE simple_instr:s YADA bool_expr:c2 ISE simple_instr:s2 DEGIL ISE simple_instr:s3   {:  RESULT = new ElseInstruction(c, s,c2, s2,s3); :}
             ;
 
-for_stat::= IDENT:i DEGIS expr:e ILE expr:e2 ARASINDA expr:e3 ART recursive:s {: RESULT = new ForInstruction(i,e,e2,e3,s.getSimplein()); :}
-           |IDENT:i DEGIS expr:e ILE expr:e2 ARASINDA expr:e3 AZ recursive:s  {: RESULT = new ForInstruction2(i,e,e2,e3,s.getSimplein()); :}
+aaaa ::= aaaa YADA bool_expr:c2 ISE simple_instr:s2 // bu aaa olayı bişeyin sonsuza
+//kadar gitmesini sağlıyomus su c2 ve s2 lerı koydukca
+//ama ya da ise nin içerisinde cagirmaya calıstık problem yaşadık cunku s2 ve c2 ler uyumlu olmuyodu
+        | YADA bool_expr:c2 ISE simple_instr:s2;
+
+
+
+list_stat ::= LPAREN expr:e1 COMMA expr:e2 RPAREN {:
+                  ArrayList<Object> list = new ArrayList<>();
+                  list.add(e1);
+                  list.add(e2);
+                  RESULT = new ListExpr(list);
+              :}
+            | LPAREN RPAREN {:
+                  RESULT = new ListExpr(new ArrayList());
+              :}
             ;
 
-foreach_stat ::= expr:e INSIDE EVERY IDENT:i VALUE FOR recursive:s {: RESULT = new ForeachInstruction(e, i, s.getSimplein()); :}
-            ;
 
-while_stat ::= LPAREN bool_expr:c RPAREN WHILE recursive:s       {: RESULT = new WhileInstruction(c, s.getSimplein()); :}
+
+while_stat ::= WHILE bool_expr:c DO simple_instr:s       {: RESULT = new WhileInstruction(c, s); :}
+            | DO simple_instr:s WHILE bool_expr:c        {: RESULT = new DoWhileInstruction(c, s); :}
             ;
 
 output_stat ::= YAZ LPAREN expr:e  RPAREN               {: RESULT = new OutputInstruction(e); :}
             ;
-
-break_stat::= BREAK {: RESULT = new BreakInstruction(); :}
-            ;
-
-continue_stat::= CONTINUE {: RESULT = new ContinueInstruction(); :}
-            ;
-
-function_stat::=  recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI return_function:r RCURLY {: RESULT = new FunctionInstruction(i.getSimplein() , e , si.getSimplein(), r); :}
-            ;
-
-recursive_id ::=  recursive_id:a  COMMA   expr:e      {: a.add(e); RESULT = a;:} //sonsuz expr
-                        | expr:e      {: RESULT = new RecursiveID(e);:} ;
-
-
-return_function::= expr:e RETURN {: RESULT = new ReturnInstruction(e); :}
-            ;
-
-/*call_function ::= recursive_id:e ILE IDENT:i {: RESULT = new CallFunction(e.getSimplein(), i) ; :} // 3,4 ile function_name
-            ;*/
 
 program ::= instr:i
           {:
