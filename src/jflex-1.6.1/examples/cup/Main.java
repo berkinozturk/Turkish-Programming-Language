@@ -13,7 +13,7 @@
   Commented By: Christopher Lopes
   File Name: Main_.java
   To Create: 
-  After the scanner, _lcalc.flex, and the parser, ycalc_.cup, have been created.
+  After the scanner, lcalc.flex, and the parser, ycalc_.cup, have been created.
   > javac Main_.java
   
   To Run: 

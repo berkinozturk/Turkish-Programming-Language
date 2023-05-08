@@ -11,8 +11,8 @@
 
 /*
   Commented By: Christopher Lopes
-  File Name: _lcalc.flex
-  To Create: > jflex _lcalc.flex
+  File Name: lcalc.flex
+  To Create: > jflex lcalc.flex
 
   and then after the parser is created
   > javac Lexer.java
