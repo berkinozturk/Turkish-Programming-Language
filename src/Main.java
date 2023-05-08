@@ -1375,11 +1375,20 @@ class ReturnInstruction implements Expr {
 class FunctionInstruction implements FunctionInstructionI {
 
 	private ArrayList<Expr> recursiveID;
+<<<<<<< HEAD
 	private String functionName;
 	private List<SimpleInstruction> recursiveList;
 	private Expr ret;
 
 	public FunctionInstruction(ArrayList<Expr> recursiveID, String functionName, ArrayList<SimpleInstruction> recursiveList, Expr ret) {
+=======
+	private Expr functionName;
+	private List<SimpleInstruction> recursiveList;
+
+	private Expr ret;
+
+	public FunctionInstruction(ArrayList<Expr> recursiveID, Expr functionName, ArrayList<SimpleInstruction> recursiveList,Expr ret) {
+>>>>>>> 649684672f853d73c4e5283ee0f684c11b3e1d93
 		this.functionName = functionName;
 		this.recursiveList = recursiveList;
 		this.recursiveID = recursiveID;
@@ -1392,6 +1401,7 @@ class FunctionInstruction implements FunctionInstructionI {
 		ArrayList<Object> object= new ArrayList<>();
 		ArrayList<String> objectID= new ArrayList<>();
 
+<<<<<<< HEAD
 
 		for(int i = 0; i < recursiveID.size(); i++){
 			Expr expr = recursiveID.get(i);
@@ -1410,6 +1420,28 @@ class FunctionInstruction implements FunctionInstructionI {
 	}
 
 	// Getters for the function name and parameter names
+=======
+		// Execute the function's body
+		for (int i = 0; i < recursiveList.size(); i++) {
+			recursiveList.get(i).run(hm);
+			/*
+			// Check if the function should return
+			if (recursiveList.contains("döndür")) {
+				Expr returnValue = (Expr) recursiveList.get(i);
+				recursiveList.remove("döndür");
+			} */
+		}
+		ArrayList <Object> object= new ArrayList<>();
+		object.add(recursiveID);
+		System.out.println(functionName.run(hm));
+		hm.put((String) functionName.run(hm),object);
+	}
+
+	// Getters for the function name and parameter names
+	public Expr getFunctionName() {
+		return functionName;
+	}
+>>>>>>> 649684672f853d73c4e5283ee0f684c11b3e1d93
 
 	public void add(Expr expr) {
 		recursiveID.add(expr);
@@ -1419,6 +1451,7 @@ class FunctionInstruction implements FunctionInstructionI {
 	}
 
 }
+<<<<<<< HEAD
 
 
 class CallFunction implements FunctionInstructionI {
@@ -1427,12 +1460,20 @@ class CallFunction implements FunctionInstructionI {
 	private ArrayList<Expr> recursiveID;
 
 	CallFunction(String functionName, ArrayList<Expr> recursiveID) {
+=======
+class CallFunction implements FunctionInstructionI {
+	private Expr functionName;
+	private ArrayList<Expr> recursiveID; //parameters
+
+	CallFunction(Expr functionName, ArrayList<Expr> recursiveID) {
+>>>>>>> 649684672f853d73c4e5283ee0f684c11b3e1d93
 		this.functionName = functionName;
 		this.recursiveID = recursiveID;
 	}
 
 	@Override
 	public void run(HashMap<String, Object> hm) {
+<<<<<<< HEAD
 
 		Object function = hm.get(functionName);
 		ArrayList<Object> listA = new ArrayList<Object>();
@@ -1496,6 +1537,102 @@ class CallFunction implements FunctionInstructionI {
 		for (SimpleInstruction i : listInstruction){
 			i.run(hm);
 		}
+=======
+		// Get the function object from the symbol table
+		Object function = hm.get(functionName.run(hm));
+		ArrayList<Object> parameterNames = null;
+		ArrayList<Expr> listParam = null;
+
+		// Check if the function is defined
+		if (function == null) {
+			throw new RuntimeException("Tanımlanamayan fonksiyon: " + functionName);
+		}
+		// Check if the function is an array list or an array
+		try {
+			if (function instanceof ArrayList) {
+				//parameterNames = ((ArrayList<Expr>) function).get(0).getExpr();
+				parameterNames = (ArrayList<Object>) function;
+			} else if (function.getClass().isArray()) {
+				//parameterNames = ((Expr[]) Array.get(function, 0))[0].getExpr();
+				parameterNames = new ArrayList<>();
+				int length = Array.getLength(function);
+				for(int i = 0; i < length; i++) {
+					parameterNames.add((Expr) Array.get(function, i));
+				}
+			} else {
+				throw new RuntimeException("Geçersiz fonksiyon tipi: " + function.getClass());
+			}
+		} catch (ClassCastException e) {
+			throw new RuntimeException("Geçersiz fonksiyon tipi: " + function.getClass());
+		}
+		// Check if the number of arguments matches the number of parameters
+		 /*if (parameterNames.size() != recursiveID.size()) {
+			throw new RuntimeException(functionName + " isimli fonksiyon " +
+					parameterNames.size() + " parametre gerektiriyor fakat " +
+					recursiveID.size() + " tane parametre verilmiş.");
+		} */
+
+		// Create a new symbol table for the function call
+		HashMap<String, Object> newHm = new HashMap<>(hm);
+
+		// Bind the arguments to the parameters
+		if(parameterNames.get(0) instanceof ArrayList){
+
+			ArrayList<?> tempList = (ArrayList<?>) parameterNames.get(0);
+			listParam = new ArrayList<>();
+
+			for (Object obj : tempList) {
+				if (obj instanceof Expr) {
+					listParam.add((Expr) obj);
+				}
+			}
+		}
+		for (int i = 0; i < listParam.size(); i++) {
+			Object argValue = recursiveID.get(i).run(newHm);
+			String paramName = listParam.get(i).run(newHm).toString();
+			newHm.put(paramName, argValue);
+			//System.out.println(hm.get(0));
+
+			Object[] objectArray = (Object[]) hm.get(functionName);
+			System.out.println(Arrays.toString(objectArray));
+			// Iterate through the keys in newhm and update corresponding values in hm
+			/*for (String key : hm.keySet()) {
+				if (newHm.containsKey(key)) {
+					Object[] oldArray = (Object[]) hm.get(key);
+					Object[] newArray = (Object[]) newHm.get(key);
+					String[] oldStringArray = (String[]) oldArray[0];
+					String[] newStringArray = (String[]) newArray[0];
+					oldStringArray[0] = newStringArray[0];
+				}
+			} */
+		}
+
+		// Execute the function body
+		Object returnValue;
+		try {
+			if (function instanceof ArrayList<?>) {
+				ArrayList<?> list = (ArrayList<?>) function;
+				if (!list.isEmpty() && list.get(0) instanceof Expr) {
+					((Expr) list.get(1)).run(newHm);
+				}
+			}
+			else {
+				Expr[] instructions = (Expr[]) Array.get(function, 1);
+				for (Expr instruction : instructions) {
+					instruction.run(newHm);
+				}
+			}
+		}catch (RuntimeException e) {
+			throw new RuntimeException(functionName+ " fonksiyonunu çalıştırırken hata oluştu " + ": " + e.getMessage());
+		}
+
+		// Check if the function has a return value and store it in the symbol table
+		if (newHm.containsKey("returnValue")) {
+			//
+			hm.put("returnValue", newHm.get("returnValue"));
+		}
+		System.out.println(hm.get("returnValue"));
+>>>>>>> 649684672f853d73c4e5283ee0f684c11b3e1d93
 
 	}
 }

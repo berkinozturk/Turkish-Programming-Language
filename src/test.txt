@@ -42,12 +42,23 @@ yaz(i);
           kır sonra
           yaz (x)};
 
+<<<<<<< HEAD
          f,z ile topla işi{
                   sonuc = f + z sonra
                   yaz(sonuc);
                   sonuc döndür };
 
 3,11 ile topla;
+=======
+
+         a,b ile topla işi{
+         sonuc = a+b+7 sonra
+          yaz (sonuc);
+        sonuc döndür
+         };
+
+3,4 ile topla;
+>>>>>>> 649684672f853d73c4e5283ee0f684c11b3e1d93
 
 
 
