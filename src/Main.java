@@ -593,6 +593,281 @@ class ListExpr implements Expr {
 	}
 }
 
+/** Adding values to list*/
+class ListAdd implements SimpleInstruction {
+	Expr exprList, value;
+
+	public ListAdd(Expr exprList, Expr value) {
+		this.exprList = exprList;
+		this.value = value;
+	}
+
+	@Override
+	public void run(HashMap<String, Object> hm) {
+
+		Object list = exprList.run(hm);
+		ArrayList<Object> listA;
+
+		if(list instanceof ArrayList){
+			listA = (ArrayList<Object>) list;
+		}
+		else if(list.getClass().isArray()) {
+			listA = new ArrayList<>();
+			int length = Array.getLength(list);
+			for(int i = 0; i < length; i++) {
+				listA.add(Array.get(list, i));
+			}
+		}
+		else {
+			System.out.println("HATA: yanlış obje tipi.");
+			System.exit(1);
+			return;
+		}
+
+		Object newValue = value.run(hm);
+		listA.add(newValue);
+
+	}
+}
+/** Getting values from the list*/
+
+class ListGet implements Expr {
+
+	Expr exprList, value;
+
+	public ListGet(Expr exprList, Expr value) {
+		this.exprList = exprList;
+		this.value = value;
+	}
+
+	@Override
+	public Object run(HashMap<String, Object> hm) {
+
+		Object list = exprList.run(hm);
+		ArrayList<Object> listA = null;
+
+		if(list instanceof ArrayList){
+			listA = (ArrayList<Object>) list;
+		}
+		else if(list.getClass().isArray()) {
+			listA = new ArrayList<>();
+			int length = Array.getLength(list);
+			for(int i = 0; i < length; i++) {
+				listA.add(Array.get(list, i));
+			}
+		}
+		else {
+			System.out.println("HATA: yanlış obje tipi.");
+			System.exit(1);
+		}
+
+		Object newValue = value.run(hm);
+		if(newValue instanceof Integer) {
+			return listA.get((int) newValue);
+		}
+		else{
+			if(newValue == null)
+				System.out.println("HATA: Sayı olması gereken yerde farklı obje bulunmakta.");
+			if(newValue instanceof ArrayList)
+				System.out.println("HATA: Sayı olması gereken yerde liste bulunmakta.");
+			if(newValue instanceof String)
+				System.out.println("HATA: Sayı olması gereken yerde yazı bulunmakta.");
+			System.exit(1);
+		}
+
+		return null;
+
+	}
+}
+/** Removing elements from the list by index */
+//d listesindeki 3. elemanı sil
+class ListRemove implements SimpleInstruction {
+	Expr exprList, value;
+
+	public ListRemove(Expr exprList, Expr value) {
+		this.exprList = exprList;
+		this.value = value;
+	}
+
+	@Override
+	public void run(HashMap<String, Object> hm) {
+
+		Object list = exprList.run(hm);
+		ArrayList<Object> listA;
+
+		if(list instanceof ArrayList){
+			listA = (ArrayList<Object>) list;
+		}
+		else if(list.getClass().isArray()) {
+			listA = new ArrayList<>();
+			int length = Array.getLength(list);
+			for(int i = 0; i < length; i++) {
+				listA.add(Array.get(list, i));
+			}
+		}
+		else {
+			System.out.println("HATA: yanlış obje tipi.");
+			System.exit(1);
+			return;
+		}
+		Object newValue = value.run(hm);
+		listA.remove((int)newValue);
+
+	}
+}
+/** Getting length of a list */
+//d listesinin uzunluğu
+class ListLength implements Expr {
+
+	Expr exprList;
+
+	public ListLength(Expr exprList) {
+		this.exprList = exprList;
+
+	}
+
+	@Override
+	public Object run(HashMap<String, Object> hm) {
+
+		Object list = exprList.run(hm);
+		ArrayList<Object> listA = null;
+
+		if(list instanceof ArrayList){
+			listA = (ArrayList<Object>) list;
+		}
+		else if(list.getClass().isArray()) {
+			listA = new ArrayList<>();
+			int length = Array.getLength(list);
+			for(int i = 0; i < length; i++) {
+				listA.add(Array.get(list, i));
+			}
+		}
+		else {
+			System.out.println("HATA: yanlış obje tipi.");
+			System.exit(1);
+		}
+
+		return listA.size();
+
+	}
+}
+/** Clearing a list */
+//d listesini temizle
+class ListClear implements SimpleInstruction {
+	Expr exprList;
+
+	public ListClear(Expr exprList) {
+		this.exprList = exprList;
+	}
+
+	@Override
+	public void run(HashMap<String, Object> hm) {
+
+		Object list = exprList.run(hm);
+		ArrayList<Object> listA;
+
+		if(list instanceof ArrayList){
+			listA = (ArrayList<Object>) list;
+		}
+		else if(list.getClass().isArray()) {
+			listA = new ArrayList<>();
+			int length = Array.getLength(list);
+			for(int i = 0; i < length; i++) {
+				listA.add(Array.get(list, i));
+			}
+		}
+		else {
+			System.out.println("HATA: yanlış obje tipi.");
+			System.exit(1);
+			return;
+		}
+
+		listA.clear();
+	}
+}
+
+
+/** Updating a list */
+// d listesinin 3. elemanı = b
+
+class ListUpdate implements SimpleInstruction {
+
+	Expr exprList, number, newValue;
+
+	public ListUpdate(Expr exprList, Expr number, Expr newValue) {
+		this.exprList = exprList;
+		this.number = number;
+		this.newValue = newValue;
+	}
+
+	@Override
+	public void run(HashMap<String, Object> hm) {
+
+		Object list = exprList.run(hm);
+		ArrayList<Object> listA;
+
+		if(list instanceof ArrayList){
+			listA = (ArrayList<Object>) list;
+		}
+		else if(list.getClass().isArray()) {
+			listA = new ArrayList<>();
+			int length = Array.getLength(list);
+			for(int i = 0; i < length; i++) {
+				listA.add(Array.get(list, i));
+			}
+		}
+		else {
+			System.out.println("HATA: yanlış obje tipi.");
+			System.exit(1);
+			return;
+		}
+
+		Object newNumber = number.run(hm);
+		listA.set((int)newNumber, newValue.run(hm));
+
+	}
+}
+
+
+
+/** Getting index of an element in a list */
+//d listesindeki a elemanının sırası
+class ListIndex implements Expr {
+
+	Expr exprList, value;
+
+	public ListIndex(Expr exprList, Expr value) {
+		this.exprList = exprList;
+		this.value = value;
+	}
+
+	@Override
+	public Object run(HashMap<String, Object> hm) {
+
+		Object list = exprList.run(hm);
+		ArrayList<Object> listA = null;
+
+		if(list instanceof ArrayList){
+			listA = (ArrayList<Object>) list;
+		}
+		else if(list.getClass().isArray()) {
+			listA = new ArrayList<>();
+			int length = Array.getLength(list);
+			for(int i = 0; i < length; i++) {
+				listA.add(Array.get(list, i));
+			}
+		}
+		else {
+			System.out.println("HATA: yanlış obje tipi.");
+			System.exit(1);
+		}
+
+		Object newValue = value.run(hm);
+		return listA.indexOf(newValue);
+
+	}
+}
+
 
 /** STRING OPERATIONS*/
 

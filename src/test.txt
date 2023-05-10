@@ -21,6 +21,34 @@ g değişkeni 20 ile 40 arasında 5 artarken {
 
     };
 
+
+    d =  liste (3,7,44444,5,5,4,3,787);
+    e =  liste ("bısdufs","sdfgsdf", "sfsdfsd", 3444);
+
+yaz(d);
+d listesinin 0. elemanı = 4;
+yaz("DEGER DEGISTI: ");
+yaz(d);
+
+we = d listesindeki 1. eleman;
+
+yaz(d listesindeki 0. eleman);
+
+d listesine 200 ekle;
+d listesine "dfgdfgdfg" ekle;
+d listesine ":)" ekle;
+   yaz(d);
+
+rr değişkeni 1 ile 10 arasında 1 artarken {
+d listesine 200 ekle;
+};
+
+
+d içindeki her i değeri için
+{yaz(i);};
+
+   yaz(d);
+
  h=20;
  t=10;
  eğer (h==21) ise {
@@ -32,11 +60,6 @@ g değişkeni 20 ile 40 arasında 5 artarken {
  değil ise {
  yaz("olduu");
  };
-
-
-
-
-
 
 
 bitir

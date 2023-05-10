@@ -61,9 +61,20 @@ STRING = \"([^\\\"]|\\.)*\"
     "her"             { return symbol(sym.EVERY); }
     "değeri"          { return symbol(sym.VALUE); }
     "için"            { return symbol(sym.FOR); }
-
     "yaz"             { return symbol(sym.YAZ); }
-    "liste"           { return symbol(sym.LISTE); }
+
+    "liste"                 { return symbol(sym.LISTE); }
+    "eleman"                { return symbol(sym.VARIABLE); }
+    "listesine"             { return symbol(sym.TOLIST); }
+    "listesindeki"          { return symbol(sym.LISTGET); }
+    "listesinin"            { return symbol(sym.LISTUPDATE);}
+    "ekle"                  { return symbol(sym.LISTADD); }
+    "elemanı"               { return symbol(sym.LISTDELETEVARIABLE); }
+    "sil"                   { return symbol(sym.LISTREMOVE); }
+    "listesinin uzunluğu"   { return symbol(sym.LISTLENGTH); }
+    "listesini temizle"     { return symbol(sym.LISTCLEAR); }
+    "elemanının sırası"     { return symbol(sym.LISTINDEX); }
+
     "readint"         { return symbol(sym.READINT); }
     "length"          { return symbol(sym.LENGTH); }
     "position"        { return symbol(sym.POSITION); }
@@ -84,10 +95,11 @@ STRING = \"([^\\\"]|\\.)*\"
     "}"               { return symbol(sym.RCURLY); }
 
 
-    "sonra"                 { return symbol(sym.SONRA); }
+    "sonra"             { return symbol(sym.SONRA); }
     "eşit"              { return symbol(sym.STREQ); }
     "eşit değil"        { return symbol(sym.STRNOTEQ); }
 
+    "."                { return symbol(sym.DOT); }
     ";"                { return symbol(sym.SEMI); }
     ","                { return symbol(sym.COMMA); }
     "("                { return symbol(sym.LPAREN); }

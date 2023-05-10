@@ -45,11 +45,12 @@ terminal   	       EQ, LT, LE, GT, GE, NE; // num_rel
 terminal    	   STREQ, STRNOTEQ; //str_rel
 terminal    	   ART,AZ;
 
-terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MODE, LPAREN, RPAREN;
+terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MODE, LPAREN, RPAREN, DOT;
 terminal Integer   NUM;
 terminal String    IDENT;
 terminal String    STRING;
-terminal           LISTE;
+terminal           LISTE, VARIABLE, LISTDELETEVARIABLE;
+terminal           TOLIST, LISTADD, LISTGET, LISTREMOVE, LISTLENGTH, LISTCLEAR, LISTINDEX, LISTUPDATE;
 
 
 /** Non-terminals **/
@@ -58,11 +59,10 @@ non terminal Expr num_expr;
 non terminal Expr str_expr;
 non terminal Expr bool_expr;
 non terminal Expr list_stat;
-non terminal Expr expr_list;
-non terminal Expr function_name;
+non terminal Expr list_get;
+non terminal Expr list_length;
+non terminal Expr list_index;
 non terminal Expr return_function;
-
-
 
 non terminal Operator num_op;
 non terminal Condition num_rel;
@@ -83,10 +83,14 @@ non terminal SimpleInstruction foreach_stat;
 non terminal SimpleInstruction output_stat;
 non terminal SimpleInstruction function_stat;
 non terminal SimpleInstruction call_function;
+non terminal SimpleInstruction list_add;
+non terminal SimpleInstruction list_remove;
+non terminal SimpleInstruction list_clear;
+non terminal SimpleInstruction list_update;
+
 non terminal Main program;
 non terminal Recursive recursive;
 non terminal RecursiveID recursive_id;
-non terminal RecursiveIDFunc recursive_id_Func;
 
 /** Precedence */
 precedence left PLUS, MINUS;
@@ -97,6 +101,10 @@ precedence left NOT;
 
 precedence left DEGIL;
 precedence left YADA;
+
+precedence left LISTREMOVE;
+precedence left LISTGET;
+precedence left LISTLENGTH;
 
 precedence left SEMI;
 precedence left LCURLY;
@@ -118,6 +126,9 @@ expr ::= IDENT:i            {: RESULT = new ID(i); :}
             |num_expr:e     {: RESULT = e; :}
             |str_expr:e     {: RESULT = e; :}
             |list_stat:e    {: RESULT = e; :}
+            |list_get:e     {: RESULT = e; :}
+            |list_length:e     {: RESULT = e; :}
+            |list_index:e     {: RESULT = e; :}
             ;
 
 list_content ::=  list_content:a  COMMA   expr:e      {: a.add(e); RESULT = a;:}
@@ -125,7 +136,15 @@ list_content ::=  list_content:a  COMMA   expr:e      {: a.add(e); RESULT = a;:}
 
 list_stat ::= LIST LPAREN list_content:e RPAREN {:
     RESULT = new ListExpr(e.getExpr());
-:};
+                :};
+
+list_add ::= expr:e TOLIST expr:e1 LISTADD {: RESULT = new ListAdd(e,e1);:};
+list_get ::= expr:e LISTGET expr:e1 DOT VARIABLE {: RESULT = new ListGet(e,e1); :};
+list_remove ::= expr:e LISTGET expr:e1 DOT LISTDELETEVARIABLE LISTREMOVE {: RESULT = new ListRemove(e,e1); :};
+list_length ::= expr:e LISTLENGTH {: RESULT = new ListLength(e); :};
+list_clear ::= expr:e LISTCLEAR {: RESULT = new ListClear(e); :};
+list_index ::= expr:e LISTGET expr:e1 LISTINDEX{: RESULT = new ListIndex(e,e1); :};
+list_update ::= expr:e LISTUPDATE expr:e1 DOT LISTDELETEVARIABLE ASSIGN expr: e2 {: RESULT = new ListUpdate(e, e1, e2); :};
 
 
 
@@ -210,6 +229,10 @@ simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | call_function:si                 {: RESULT = si; :}
               | BEGIN instr:si SEMI END          {: RESULT = new BeginEndInstruction(si); :}
               | output_stat:si                   {: RESULT = si; :}
+              | list_add:si                      {: RESULT = si; :}
+              | list_remove:si                   {: RESULT = si; :}
+              | list_clear:si                    {: RESULT = si; :}
+              | list_update:si                   {: RESULT = si; :}
               | EXIT                             {: System.exit(0); :}
               ;
 
