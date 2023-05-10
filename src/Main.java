@@ -1167,7 +1167,7 @@ class IfElseInstruction implements IfInstructionI {
 
 						}
 					}
-					if (!isContinueEncountered) {
+					else if (!isContinueEncountered) {
 						for (int a = 0; a < recursiveList2.get(i).size(); a++) {
 							recursiveList2.get(i).get(a).run(hm);
 							if(recursiveList2.get(i).get(a) instanceof ContinueInstruction){

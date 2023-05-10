@@ -5,61 +5,38 @@ başla
 	c = a + b;
     yaz (c);
 
-    d =  liste (3,7,5,5,4,3,787);
-    e =  liste ("bısdufs","sdfgsdf", "sfsdfsd", 3444);
-
-d içindeki her i değeri için
-yaz(i);
-
-    yaz(d);
-    yaz(e);
-
-	s1 = "asd";
-	s2 = "dsa";
-	s3 = concatenate(s1, s2);
-	s4 = "asd";
-	yaz(s3);
-	yaz("ALTTAKI SAYI COUNTER: ");
-
-
-    g değişkeni 20 ile 40 arasında 5 artarken
+g değişkeni 20 ile 40 arasında 5 artarken {
     eğer (g==20) ise {
-    yaz("irem") sonra
-    devam et}
+    yaz("irem");
+    devam et;
+    }
     ya da (g == 25) ise {
-    kır} sonra
     yaz(g);
+    kır;
+    }
+    ya da (g == 30) ise {
+    yaz(g);
+    yaz("kirilmadi");
+    };
+
+    };
+
+ h=20;
+ t=10;
+ eğer (h==21) ise {
+ yaz(g);
+ }
+ ya da (t==10) ise {
+ yaz("görüyor mu?");
+ }
+ değil ise {
+ yaz("olduu");
+ };
 
 
 
-    x=10;
-          (x<20) olduğu sürece
-          x = x+1 sonra
-          eğer (x==15) ise{
-          yaz("kır calıstı") sonra
-           devam et}
-          ya da(x==17) ise{
-          kır sonra
-          yaz (x)};
 
 
-         z,f ile topla işi{
-                  sonuc = z+f sonra
-                  yaz (sonuc);
-                  sonuc döndür };
-
-12,4 ile topla;
-
-
-
-
-
-	yaz("String değeri gir, aynısını basacağım");
-	yaz(readstr);
-
-
-	yaz("enter int, I will print it");
-	yaz(readint)
 
 
 bitir
