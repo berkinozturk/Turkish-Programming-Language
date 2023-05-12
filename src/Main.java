@@ -18,6 +18,9 @@ interface ForeachInstructionI extends SimpleInstruction {
 	void run(HashMap<String, Object> hm); }
 interface FunctionInstructionI extends SimpleInstruction {
 	void run(HashMap<String, Object> hm); }
+interface FunctionReturnInstructionI extends SimpleInstruction {
+	void run(HashMap<String, Object> hm); }
+
 
 public class Main {
 
@@ -1588,7 +1591,7 @@ class Recursive{
 		return recursiveList;
 	}
 	public void run(HashMap<String, Object> hm){
-		
+
 	}
 }
 
@@ -1630,7 +1633,7 @@ class ContinueInstruction implements SimpleInstruction{
 	}
 }
 
-class ReturnInstruction implements Expr {
+class ReturnInstruction{
 
 	private Expr expr;
 
@@ -1640,9 +1643,9 @@ class ReturnInstruction implements Expr {
 	public Expr getReturn(){
 		return expr;
 	}
-	public Object run(HashMap<String,Object> hm)
+	public void run(HashMap<String,Object> hm)
 	{
-		return hm.get(expr);
+
 	}
 }
 
@@ -1652,13 +1655,14 @@ class FunctionInstruction implements FunctionInstructionI {
 	private ArrayList<Expr> recursiveID;
 	private String functionName;
 	private List<SimpleInstruction> recursiveList;
-	private Expr ret;
+	//private Expr returnExpr;
 
-	public FunctionInstruction(ArrayList<Expr> recursiveID, String functionName, ArrayList<SimpleInstruction> recursiveList, Expr ret) {
+
+	public FunctionInstruction(ArrayList<Expr> recursiveID, String functionName, ArrayList<SimpleInstruction> recursiveList) {
 		this.functionName = functionName;
 		this.recursiveList = recursiveList;
 		this.recursiveID = recursiveID;
-		this.ret = ret;
+		//this.returnExpr = returnExpr;
 	}
 
 	@Override
@@ -1673,14 +1677,12 @@ class FunctionInstruction implements FunctionInstructionI {
 			if (expr instanceof ID) {
 				ID idExpr = (ID) expr;
 				String identifier = idExpr.getId();
-				//System.out.println("Identifier: " + identifier);
 				objectID.add(identifier);
 			}
 		}
 
 		object.add(objectID);
 		object.add(recursiveList);
-
 		hm.put(functionName,object);
 	}
 
@@ -1689,13 +1691,9 @@ class FunctionInstruction implements FunctionInstructionI {
 	public void add(Expr expr) {
 		recursiveID.add(expr);
 	}
-	public ArrayList<Expr> getExpr() {
-		return recursiveID;
-	}
+
 
 }
-
-
 class CallFunction implements FunctionInstructionI {
 
 	private String functionName;
@@ -1759,18 +1757,21 @@ class CallFunction implements FunctionInstructionI {
 
 
 		/** burası çalıştırmak için function'ı comment kısımları sadece çalışıyor mu diye bakmak için **/
-
+		HashMap<String, Object> variables = new HashMap<>();
 		for(int i = 0 ; i < listParam.size(); i++){
-			//System.out.println("LIST PARAMETRE");
-			//System.out.println(functionName);
-			//System.out.println("BURASI recursive id " + recursiveID.get(i).run(hm));
-			//System.out.println("BURASI listParam id " +listParam.get(i));
-			hm.put(listParam.get(i), recursiveID.get(i).run(hm));
+			variables.put(listParam.get(i), recursiveID.get(i).run(hm));
 		}
+		for(SimpleInstruction instruction : listInstruction) {
+			instruction.run(variables);
+		}
+		/*
+		// retrieve the value of the returnValue variable from the HashMap
+		Object returnValue = variables.get("döndür");
 
-		for (SimpleInstruction i : listInstruction){
-			i.run(hm);
+		if (returnValue != null) {
+			hm.put("döndür", returnValue);
 		}
+		*/
 
 	}
 }

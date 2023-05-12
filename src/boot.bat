@@ -1,6 +1,6 @@
 @echo off
 :: compile
-jflex-1.8.2.jar lcalc.flex
+jflex-1.6.1\jflex-1.8.2.jar lcalc.flex
 java -cp .;java-cup-11b.jar java_cup.Main < ycalc.cup
 javac -cp .;java-cup-11b.jar Main.java
 
