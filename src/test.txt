@@ -5,6 +5,7 @@ başla
 	c = a + b;
     yaz (c);
 
+
 g değişkeni 20 ile 40 arasında 5 artarken {
     eğer (g==20) ise {
     yaz("irem");
@@ -18,12 +19,28 @@ g değişkeni 20 ile 40 arasında 5 artarken {
     yaz(g);
     yaz("kirilmadi");
     };
-
-    };
+};
 
 
     d =  liste (3,7,44444,5,5,4,3,787);
     e =  liste ("bısdufs","sdfgsdf", "sfsdfsd", 3444);
+    yaz("d listesinin uzunluğu");
+    yaz(d listesinin uzunluğu);
+    yaz(d listesindeki 787 elemanının sırası);
+    d listesine "nese" ekle;
+    yaz(d);
+    yaz(d listesinin uzunluğu);
+    xx = d listesindeki 3. eleman;
+    yaz("d listesinin 3. elemanı yazdırılacak");
+    yaz(xx);
+    yaz("d listesinin 7. elemanı silinecek");
+    d listesindeki 7. elemanı sil;
+    yaz(d);
+    temizlenecek = liste ( 1,2,3,4,5);
+    yaz(temizlenecek);
+    temizlenecek listesini temizle;
+    yaz(temizlenecek);
+
 
 yaz(d);
 d listesinin 0. elemanı = 4;
