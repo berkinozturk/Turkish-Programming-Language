@@ -277,7 +277,7 @@ break_stat::= BREAK {: RESULT = new BreakInstruction(); :}
 continue_stat::= CONTINUE {: RESULT = new ContinueInstruction(); :}
             ;
 
-function_stat::=  recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI SEMI RPAREN return_function:r  {: RESULT = new FunctionInstruction(i.getRecursiveID() , e , si.getSimplein(), r ); :}
+function_stat::=  recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI return_function:r RCURLY {: RESULT = new FunctionInstruction(i.getRecursiveID() , e , si.getSimplein(), r ); :}
             ;
 
 recursive_id ::=  recursive_id:a  COMMA   expr:e      {: a.add(e); RESULT = a;:} //sonsuz expr

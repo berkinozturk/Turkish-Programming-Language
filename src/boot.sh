@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #compile
-jflex-1.6.1/bin/jflex lcalc.flex;
+bin/jflex lcalc.flex;
 java -cp .:java-cup-11b.jar java_cup.Main  < ycalc.cup;
 javac -cp .:java-cup-11b.jar Main.java;
 
