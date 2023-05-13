@@ -1,43 +1,62 @@
 başla
-
 	a = 1;
 	b = 2;
 	c = a + b;
     yaz (c);
 
+*** BU BİR YORUM SATIRIDIR ***
+yaz("readstr değeri gir");
+oku = readstr;
+yaz(oku);
+
+yaz("readint değeri gir");
+bbb = readint;
+yaz("Şimdi readint yazdırılacak");
+yaz(bbb);
+yaz(10+bbb);
+
 g değişkeni 20 ile 40 arasında 5 artarken {
     eğer (g==20) ise {
-    yaz("irem");
-    devam et;
+        yaz("irem");
+        atla;
     }
     ya da (g == 25) ise {
-    yaz(g);
-    kır;
+        yaz(g);
+        kır;
     }
     ya da (g == 30) ise {
-    yaz(g);
-    yaz("kirilmadi");
+        yaz(g);
+        yaz("kirilmadi");
+    };
     };
 
-    };
 
-
-    d =  liste (3,7,44444,5,5,4,3,787);
-    e =  liste ("bısdufs","sdfgsdf", "sfsdfsd", 3444);
+d =  liste (3,7,44444,5,5,4,3,787);
+e =  liste ("bısdufs","sdfgsdf", "sfsdfsd", 3444);
 
 yaz(d);
+yaz(d listesinin uzunluğu);
+yaz(d listesindeki 787 elemanının sırası);
+d listesine "nese" ekle;
+yaz(d);
+
+xx = d listesindeki 3. eleman;
+yaz("d listesinin 3. elemanı yazdırılacak");
+yaz(xx);
+
 d listesinin 0. elemanı = 4;
 yaz("DEGER DEGISTI: ");
 yaz(d);
 
-we = d listesindeki 1. eleman;
+yaz("d listesinin 7. elemanı silinecek");
+d listesindeki 7. elemanı sil;
+yaz(d);
 
-yaz(d listesindeki 0. eleman);
+temizlenecek = liste ( 1,2,3,4,5);
+yaz(temizlenecek);
+temizlenecek listesini temizle;
+yaz(temizlenecek);
 
-d listesine 200 ekle;
-d listesine "dfgdfgdfg" ekle;
-d listesine ":)" ekle;
-   yaz(d);
 
 rr değişkeni 1 ile 10 arasında 1 artarken {
 d listesine 200 ekle;
@@ -60,6 +79,16 @@ d içindeki her i değeri için
  değil ise {
  yaz("olduu");
  };
+
+
+k,l ile topla işi {
+   sonuc = k+l;
+   yaz(sonuc);
+};
+
+3,4 ile topla;
+
+
 
 
 bitir

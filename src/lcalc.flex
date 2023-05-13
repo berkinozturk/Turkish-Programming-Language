@@ -22,6 +22,7 @@ import java_cup.runtime.*;
 
 LineTerminator = \r|\n|\r\n
 WhiteSpace     = {LineTerminator} | [ \t\f]
+Comment   = "***" [^*] ~"***"
 
 NUM = [0-9]+
 IDENT = [A-Za-z_][A-Za-z_0-9]*
@@ -81,7 +82,7 @@ STRING = \"([^\\\"]|\\.)*\"
     "readstr"         { return symbol(sym.READSTR); }
     "concatenate"     { return symbol(sym.CONCATENATE); }
     "substring"       { return symbol(sym.SUBSTRING); }
-    "devam et"        { return symbol(sym.CONTINUE); }
+    "atla"        { return symbol(sym.CONTINUE); }
     "kır"             { return symbol(sym.BREAK); }
 
     "="               {return symbol(sym.ASSIGN); }
@@ -113,7 +114,7 @@ STRING = \"([^\\\"]|\\.)*\"
     {NUM}            { return symbol(sym.NUM, new Integer(yytext())); }
     {IDENT}          { return symbol(sym.IDENT, new String(yytext()));}
     {STRING}         { return symbol(sym.STRING, new String(yytext())); }
-
+    {Comment}                      { /* ignore */ }
     {WhiteSpace}       { /* do nothing */ }
     <<EOF>> { return symbol(sym.EOF); }
 }

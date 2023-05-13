@@ -214,12 +214,48 @@ class IntExpression implements Expr
 	}
 }
 
-class IntEnterExpression implements Expr
-{
-	public Object run(HashMap<String, Object> hm)
-	{
-		java.util.Scanner in = new java.util.Scanner(System.in);
-		return in.nextInt();
+class IntValueExpression implements Expr {
+	Expr value;
+
+	public IntValueExpression(Expr value) {
+		this.value = value;
+	}
+
+	@Override
+	public Object run(HashMap<String, Object> hm) {
+		return value.run(hm);
+	}
+
+	@Override
+	public String toString() {
+		return value.toString();
+	}
+
+	public int getIntValue(HashMap<String, Object> hm) {
+		return ((Number) value.run(hm)).intValue();
+	}
+}
+
+
+
+class IntEnterExpression implements Expr {
+
+	public Object run(HashMap<String, Object> hm) {
+		Scanner scanner = new Scanner(System.in);
+		int input = scanner.nextInt();
+
+		return new IntValueExpression(new Expr() {
+			@Override
+			public Object run(HashMap<String, Object> hm) {
+				return input;
+			}
+			@Override
+			public String toString() {
+				return "\"" + input + "\"";
+
+			}
+		}).getIntValue(hm);
+
 	}
 }
 
@@ -889,12 +925,40 @@ class StringExpression implements Expr
 	}
 }
 
-class StrEnterExpression implements Expr
-{
-	public Object run(HashMap<String, Object> hm)
-	{
-		java.util.Scanner in = new java.util.Scanner(System.in);
-		return in.next();
+//GETTING VALUES FROM USER     a=readstr;
+class StrValueExpression implements Expr {
+	Expr value;
+
+	public StrValueExpression(Expr value) {
+		this.value = value;
+	}
+
+	@Override
+	public Object run(HashMap<String, Object> hm) {
+		return value.run(hm);
+	}
+
+	@Override
+	public String toString() {
+		return value.toString();
+	}
+}
+
+class StrEnterExpression implements Expr {
+
+	public Object run(HashMap<String, Object> hm) {
+		Scanner scanner = new Scanner(System.in);
+		String input = scanner.next();
+		return new StrValueExpression(new Expr() {
+			@Override
+			public Object run(HashMap<String, Object> hm) {
+				return input;
+			}
+			@Override
+			public String toString() {
+				return "\"" + input + "\""; // Add quotes to the string representation
+			}
+		});
 	}
 }
 

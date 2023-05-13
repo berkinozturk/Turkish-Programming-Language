@@ -62,7 +62,7 @@ non terminal Expr list_stat;
 non terminal Expr list_get;
 non terminal Expr list_length;
 non terminal Expr list_index;
-non terminal Expr return_function;
+
 
 non terminal Operator num_op;
 non terminal Condition num_rel;
@@ -91,6 +91,7 @@ non terminal SimpleInstruction list_update;
 non terminal Main program;
 non terminal Recursive recursive;
 non terminal RecursiveID recursive_id;
+non terminal ReturnInstruction return_function;
 
 /** Precedence */
 precedence left PLUS, MINUS;
@@ -277,14 +278,15 @@ break_stat::= BREAK {: RESULT = new BreakInstruction(); :}
 continue_stat::= CONTINUE {: RESULT = new ContinueInstruction(); :}
             ;
 
-function_stat::=  recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI return_function:r RCURLY {: RESULT = new FunctionInstruction(i.getRecursiveID() , e , si.getSimplein(), r ); :}
-            ;
+function_stat::=  recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI RCURLY {: RESULT = new FunctionInstruction(i.getRecursiveID() , e , si.getSimplein() ); :}
+                ;
 
-recursive_id ::=  recursive_id:a  COMMA   expr:e      {: a.add(e); RESULT = a;:} //sonsuz expr
-                        | expr:e      {: RESULT = new RecursiveID(e);:}
+
+recursive_id ::=  recursive_id:a  COMMA   expr:e    {: a.add(e); RESULT = a;:} //sonsuz expr
+                 | expr:e                    {: RESULT = new RecursiveID(e);:}
                         ;
 
-return_function::= expr:e RETURN {: RESULT = new ReturnInstruction(e); :}
+return_function::= expr:e RETURN SEMI {: RESULT = new ReturnInstruction(e); :}
             ;
 
 call_function ::= recursive_id:e ILE IDENT:i
