@@ -1,10 +1,21 @@
 başla
+
+
+eğer doğru ise{
+yaz("doğru");
+};
+
+dg = doğru;
+yaz(dg);
+
 	a = 1;
 	b = 2;
 	c = a + b;
     yaz (c);
 
-*** BU BİR YORUM SATIRIDIR ***
+*** BU BİR YORUM SATIRIDIR
+
+
 yaz("readstr değeri gir");
 oku = readstr;
 yaz(oku);
@@ -14,6 +25,9 @@ bbb = readint;
 yaz("Şimdi readint yazdırılacak");
 yaz(bbb);
 yaz(10+bbb);
+
+***
+
 
 g değişkeni 20 ile 40 arasında 5 artarken {
     eğer (g==20) ise {
@@ -85,8 +99,13 @@ yaz(d);
 k,l ile topla işi {
    sonuc = k+l;
    yaz(sonuc);
+   sonuc döndür;
 };
 
 3,4 ile topla;
+
+a = çağır 3,4 ile topla;
+
+yaz(a);
 
 bitir

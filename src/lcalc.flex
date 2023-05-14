@@ -18,7 +18,7 @@ import java_cup.runtime.*;
         return new Symbol(type, yyline, yycolumn, value);
     }
 %}
-   
+
 
 LineTerminator = \r|\n|\r\n
 WhiteSpace     = {LineTerminator} | [ \t\f]
@@ -28,8 +28,9 @@ NUM = [0-9]+
 IDENT = [A-Za-z_][A-Za-z_0-9]*
 STRING = \"([^\\\"]|\\.)*\"
 
+
 %%
-   
+
 <YYINITIAL> {
 
     /** Keywords. */
@@ -58,13 +59,14 @@ STRING = \"([^\\\"]|\\.)*\"
     "işi"             { return symbol(sym.FUNCTION); }
     "döndür"          { return symbol(sym.RETURN); }
 
+    "çağır"    { return symbol(sym.CAGIR); }
+
     "içindeki"        { return symbol(sym.INSIDE); }
     "her"             { return symbol(sym.EVERY); }
     "değeri"          { return symbol(sym.VALUE); }
     "için"            { return symbol(sym.FOR); }
     "yaz"             { return symbol(sym.YAZ); }
 
-    "liste"                 { return symbol(sym.LISTE); }
     "eleman"                { return symbol(sym.VARIABLE); }
     "listesine"             { return symbol(sym.TOLIST); }
     "listesindeki"          { return symbol(sym.LISTGET); }
@@ -77,12 +79,12 @@ STRING = \"([^\\\"]|\\.)*\"
     "elemanının sırası"     { return symbol(sym.LISTINDEX); }
 
     "readint"         { return symbol(sym.READINT); }
+    "readstr"         { return symbol(sym.READSTR); }
     "length"          { return symbol(sym.LENGTH); }
     "position"        { return symbol(sym.POSITION); }
-    "readstr"         { return symbol(sym.READSTR); }
     "concatenate"     { return symbol(sym.CONCATENATE); }
     "substring"       { return symbol(sym.SUBSTRING); }
-    "atla"        { return symbol(sym.CONTINUE); }
+    "atla"            { return symbol(sym.CONTINUE); }
     "kır"             { return symbol(sym.BREAK); }
 
     "="               {return symbol(sym.ASSIGN); }
@@ -95,8 +97,6 @@ STRING = \"([^\\\"]|\\.)*\"
     "{"               { return symbol(sym.LCURLY); }
     "}"               { return symbol(sym.RCURLY); }
 
-
-    "sonra"             { return symbol(sym.SONRA); }
     "eşit"              { return symbol(sym.STREQ); }
     "eşit değil"        { return symbol(sym.STRNOTEQ); }
 

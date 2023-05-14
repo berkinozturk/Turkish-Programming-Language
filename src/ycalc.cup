@@ -26,7 +26,7 @@ parser code {:
 
 /** Terminals */
 
-terminal           AND, OR, NOT, TRUE, FALSE, SONRA; // boolean
+terminal           AND, OR, NOT, TRUE, FALSE; // boolean
 
 // flow
 terminal           BEGIN, END, EXIT;
@@ -44,12 +44,13 @@ terminal           ASSIGN;
 terminal   	       EQ, LT, LE, GT, GE, NE; // num_rel
 terminal    	   STREQ, STRNOTEQ; //str_rel
 terminal    	   ART,AZ;
+terminal           CAGIR;
 
 terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MODE, LPAREN, RPAREN, DOT;
 terminal Integer   NUM;
 terminal String    IDENT;
 terminal String    STRING;
-terminal           LISTE, VARIABLE, LISTDELETEVARIABLE;
+terminal           VARIABLE, LISTDELETEVARIABLE;
 terminal           TOLIST, LISTADD, LISTGET, LISTREMOVE, LISTLENGTH, LISTCLEAR, LISTINDEX, LISTUPDATE;
 
 
@@ -62,6 +63,7 @@ non terminal Expr list_stat;
 non terminal Expr list_get;
 non terminal Expr list_length;
 non terminal Expr list_index;
+non terminal Expr call_return_function;
 
 
 non terminal Operator num_op;
@@ -88,16 +90,18 @@ non terminal SimpleInstruction list_remove;
 non terminal SimpleInstruction list_clear;
 non terminal SimpleInstruction list_update;
 
+non terminal ReturnInstruction return_function;
+
 non terminal Main program;
 non terminal Recursive recursive;
 non terminal RecursiveID recursive_id;
-non terminal ReturnInstruction return_function;
+
 
 /** Precedence */
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODE;
 
-precedence left OR, AND, SONRA;
+precedence left OR, AND;
 precedence left NOT;
 
 precedence left DEGIL;
@@ -109,6 +113,7 @@ precedence left LISTLENGTH;
 
 precedence left SEMI;
 precedence left LCURLY;
+precedence left CAGIR;
 
 
 start with program;
@@ -130,6 +135,7 @@ expr ::= IDENT:i            {: RESULT = new ID(i); :}
             |list_get:e     {: RESULT = e; :}
             |list_length:e     {: RESULT = e; :}
             |list_index:e     {: RESULT = e; :}
+            |call_return_function:e {: RESULT = e; :}
             ;
 
 list_content ::=  list_content:a  COMMA   expr:e      {: a.add(e); RESULT = a;:}
@@ -137,7 +143,8 @@ list_content ::=  list_content:a  COMMA   expr:e      {: a.add(e); RESULT = a;:}
 
 list_stat ::= LIST LPAREN list_content:e RPAREN {:
     RESULT = new ListExpr(e.getExpr());
-                :};
+                :}
+                ;
 
 list_add ::= expr:e TOLIST expr:e1 LISTADD {: RESULT = new ListAdd(e,e1);:};
 list_get ::= expr:e LISTGET expr:e1 DOT VARIABLE {: RESULT = new ListGet(e,e1); :};
@@ -242,6 +249,7 @@ instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
         ;
 
 assign_stat ::= IDENT:i ASSIGN expr:e            {: RESULT = new AssignInstruction(i,e); :}
+            | IDENT:i ASSIGN bool_expr:e            {: RESULT = new AssignInstruction(i,e); :}
         ;
 
 recursive::= recursive:i SEMI simple_instr:si     {: i.add(si); RESULT = i; :}
@@ -279,10 +287,11 @@ continue_stat::= CONTINUE {: RESULT = new ContinueInstruction(); :}
             ;
 
 function_stat::=  recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI RCURLY {: RESULT = new FunctionInstruction(i.getRecursiveID() , e , si.getSimplein() ); :}
+                | recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI return_function:r RCURLY {: RESULT = new FunctionReturnInstruction(i.getRecursiveID() , e , si.getSimplein(), r.getReturn() ); :}
                 ;
 
 
-recursive_id ::=  recursive_id:a  COMMA   expr:e    {: a.add(e); RESULT = a;:} //sonsuz expr
+recursive_id ::=  recursive_id:a  COMMA   expr:e    {: a.add(e); RESULT = a;:}  //sonsuz expr
                  | expr:e                    {: RESULT = new RecursiveID(e);:}
                         ;
 
@@ -291,6 +300,10 @@ return_function::= expr:e RETURN SEMI {: RESULT = new ReturnInstruction(e); :}
 
 call_function ::= recursive_id:e ILE IDENT:i
                   {: RESULT = new CallFunction(i, e.getRecursiveID()); :}
+                  ;
+
+call_return_function ::= CAGIR recursive_id:e ILE IDENT:i
+                  {: RESULT = new CallReturnFunction(i, e.getRecursiveID()); :}
                   ;
 
 
