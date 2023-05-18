@@ -44,7 +44,7 @@ STRING = \"([^\\\"]|\\.)*\"
     "bitir"           { return symbol(sym.END); }
     "exit"            { return symbol(sym.EXIT); }
 
-
+    "rastgele"         { return symbol(sym.RANDOM); }
     "eğer"            { return symbol(sym.EGER); }
     "ise"             { return symbol(sym.ISE); }
     "ya da"           { return symbol(sym.YADA); }
@@ -78,12 +78,12 @@ STRING = \"([^\\\"]|\\.)*\"
     "listesini temizle"     { return symbol(sym.LISTCLEAR); }
     "elemanının sırası"     { return symbol(sym.LISTINDEX); }
 
-    "readint"         { return symbol(sym.READINT); }
-    "readstr"         { return symbol(sym.READSTR); }
-    "length"          { return symbol(sym.LENGTH); }
-    "position"        { return symbol(sym.POSITION); }
-    "concatenate"     { return symbol(sym.CONCATENATE); }
-    "substring"       { return symbol(sym.SUBSTRING); }
+  "sayıyı oku"            { return symbol(sym.READINT); }
+    "kelimeyi oku"          { return symbol(sym.READSTR); }
+    "uzunluğunu al"         { return symbol(sym.LENGTH); }/** */
+    "pozisyon"        { return symbol(sym.POSITION); } /** */
+    "birleştir"       { return symbol(sym.CONCATENATE); }
+    "aralığını göster"       { return symbol(sym.SUBSTRING); }
     "atla"            { return symbol(sym.CONTINUE); }
     "kır"             { return symbol(sym.BREAK); }
 

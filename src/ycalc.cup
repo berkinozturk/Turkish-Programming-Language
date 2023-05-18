@@ -5,19 +5,27 @@ import java.io.*;
 parser code {:
    
     public void report_error(String message, Object info) {
-        StringBuilder m = new StringBuilder("Error");
+        StringBuilder m = new StringBuilder("HATA: ");
         if (info instanceof java_cup.runtime.Symbol) {
             java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
-            if (s.left >= 0) {                
-                m.append(" in line "+(s.left+1));   
-                if (s.right >= 0)                    
-                    m.append(", column "+(s.right+1));
+            if (s.left >= 0) {
+                m.append((s.left+1)+". satırda ");
+                if (s.right >= 0)
+                    m.append(","+(s.right+1)+". sütunda");
             }
         }
-        m.append(" : "+message);
-        System.err.println(m);
+        if (message.equals("Syntax error")) {
+                m.append(": Syntax hatası bulunuyor, lütfen aşağıda belirtilen geçerli ifadelerden birini kullanınız.");
+            } else if (message.equals("Couldn't repair and continue parse")) {
+                m.append(": Hatalı kod onarılamadı ve çözümlemeye devam edilemedi.");
+            } else if (message.substring(0,8)=="instead") {
+                     m.append(" Beklenen belirteç türleri: ");
+            } else {
+                m.append(": " + message);
+            }
+            System.err.println(m);
     }
-   
+
     public void report_fatal_error(String message, Object info) {
         report_error(message, info);
         System.exit(1);
@@ -52,7 +60,7 @@ terminal String    IDENT;
 terminal String    STRING;
 terminal           VARIABLE, LISTDELETEVARIABLE;
 terminal           TOLIST, LISTADD, LISTGET, LISTREMOVE, LISTLENGTH, LISTCLEAR, LISTINDEX, LISTUPDATE;
-
+terminal RANDOM;
 
 /** Non-terminals **/
 non terminal Expr expr;
@@ -64,6 +72,8 @@ non terminal Expr list_get;
 non terminal Expr list_length;
 non terminal Expr list_index;
 non terminal Expr call_return_function;
+non terminal Expr expr_or_bool;
+non terminal Expr random_expr;
 
 
 non terminal Operator num_op;
@@ -116,6 +126,7 @@ precedence left LCURLY;
 precedence left CAGIR;
 
 
+
 start with program;
 
 /** ============= GRAMMAR ============= */
@@ -135,6 +146,7 @@ expr ::= IDENT:i            {: RESULT = new ID(i); :}
             |list_get:e     {: RESULT = e; :}
             |list_length:e     {: RESULT = e; :}
             |list_index:e     {: RESULT = e; :}
+            |random_expr:e     {: RESULT = e; :}
             |call_return_function:e {: RESULT = e; :}
             ;
 
@@ -213,17 +225,18 @@ num_rel ::=   EQ         {: RESULT = new EqCond(); :}
             ;
 
 str_rel ::= STREQ     {: RESULT = new EqCond(); :}
-          | STRNOTEQ  {: RESULT = new StrNotEqCond(); :}
+          | STRNOTEQ  {: RESULT = new NeCond(); :}
           ;
-
-bool_expr ::= TRUE                               {: RESULT = new BooleanExpression(true); :}
-            | FALSE                              {: RESULT = new BooleanExpression(false); :}
+expr_or_bool ::= expr:e {: RESULT = e; :}
+                 | bool_expr:e {: RESULT = e; :};
+bool_expr ::= TRUE                          {: RESULT = new BooleanExpression(true); :}
+            | FALSE                        {: RESULT = new BooleanExpression(false); :}
             | LPAREN bool_expr:e RPAREN          {: RESULT = new PBooleanExpression(e); :}
-            | NOT bool_expr:e                    {: RESULT = new NegationBooleanExpression(e); :}
+            | NOT expr_or_bool:e                  {: RESULT = new NegationBooleanExpression(e); :}
             | bool_expr:e AND bool_expr:e2       {: RESULT = new AndBooleanExpression(e, e2); :}
             | bool_expr:e OR bool_expr:e2        {: RESULT = new OrBooleanExpression(e, e2); :}
-            | expr: e num_rel:o expr:e2          {: RESULT = new ConditionBooleanExpression(e, o, e2); :}
-            | expr:s str_rel:o expr:s2           {: RESULT = new ConditionBooleanExpression(s, o, s2); :}
+            | expr: e num_rel:o expr_or_bool:e2          {: RESULT = new ConditionBooleanExpression(e, o, e2); :}
+            | expr:s str_rel:o expr_or_bool:s2           {: RESULT = new ConditionBooleanExpression(s, o, s2); :}
             ;
 
 simple_instr ::= assign_stat:si                  {: RESULT = si; :}
@@ -244,12 +257,14 @@ simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | EXIT                             {: System.exit(0); :}
               ;
 
+random_expr ::= RANDOM LPAREN expr:e COMMA expr:e1 RPAREN{:  RESULT = new RandomExpression(e,e1);:}
+ ;
 instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
         | simple_instr:si                        {: RESULT = new InstructionList(si); :}
         ;
 
 assign_stat ::= IDENT:i ASSIGN expr:e            {: RESULT = new AssignInstruction(i,e); :}
-            | IDENT:i ASSIGN bool_expr:e            {: RESULT = new AssignInstruction(i,e); :}
+             | IDENT:i ASSIGN bool_expr:e       {: RESULT = new BooleanAssignInstruction(i, e); :}
         ;
 
 recursive::= recursive:i SEMI simple_instr:si     {: i.add(si); RESULT = i; :}
@@ -257,14 +272,14 @@ recursive::= recursive:i SEMI simple_instr:si     {: i.add(si); RESULT = i; :}
 
           ;
 
-if_stat ::= EGER bool_expr:c ISE LCURLY recursive:s SEMI RCURLY  {: RESULT = new IfInstruction(c, s.getSimplein()); :}
-          | EGER bool_expr:c ISE LCURLY recursive:s SEMI RCURLY DEGIL ISE LCURLY recursive:s2 SEMI RCURLY   {: RESULT = new IfElseIfInstruction(c, s.getSimplein(), s2.getSimplein()); :}
-          | EGER bool_expr:c ISE LCURLY recursive:s SEMI RCURLY if_content:cont  {: RESULT = new IfElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList()); :}
-          | EGER bool_expr:c ISE LCURLY recursive:s SEMI RCURLY if_content:cont DEGIL ISE LCURLY recursive:s3 SEMI RCURLY  {:  RESULT = new ElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList(), s3.getSimplein()); :}
-          ;
+if_stat ::= EGER expr_or_bool:c ISE LCURLY recursive:s SEMI RCURLY {: RESULT = new IfInstruction(c, s.getSimplein()); :}
+ | EGER expr_or_bool:c ISE LCURLY recursive:s SEMI RCURLY DEGIL ISE LCURLY recursive:s2 SEMI RCURLY {: RESULT = new IfElseIfInstruction(c, s.getSimplein(), s2.getSimplein()); :}
+ | EGER expr_or_bool:c ISE LCURLY recursive:s SEMI RCURLY if_content:cont {: RESULT = new IfElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList()); :}
+ | EGER expr_or_bool:c ISE LCURLY recursive:s SEMI RCURLY if_content:cont DEGIL ISE LCURLY recursive:s3 SEMI RCURLY {: RESULT = new ElseInstruction(c, s.getSimplein(), cont.getExpr(), cont.getSimpleinsList(), s3.getSimplein()); :}
+ ;
 
-if_content ::= if_content:cont YADA bool_expr:c2 ISE LCURLY recursive:s2 SEMI RCURLY  {:cont.add(c2,s2.getSimplein()); RESULT = cont;:}
-            |  YADA bool_expr:c2 ISE LCURLY recursive:s2 SEMI RCURLY                  {: RESULT = new ElseIfContent(c2, s2.getSimplein()); :}
+if_content ::= if_content:cont YADA expr_or_bool:c2 ISE LCURLY recursive:s2 SEMI RCURLY  {:cont.add(c2,s2.getSimplein()); RESULT = cont;:}
+            |  YADA expr_or_bool:c2 ISE LCURLY recursive:s2 SEMI RCURLY                  {: RESULT = new ElseIfContent(c2, s2.getSimplein()); :}
             ;
 
 for_stat::= IDENT:i DEGIS expr:e ILE expr:e2 ARASINDA expr:e3 ART LCURLY recursive:s SEMI RCURLY  {: RESULT = new ForInstruction(i,e,e2,e3,s.getSimplein()); :}
@@ -274,7 +289,7 @@ for_stat::= IDENT:i DEGIS expr:e ILE expr:e2 ARASINDA expr:e3 ART LCURLY recursi
 foreach_stat ::= expr:e INSIDE EVERY IDENT:i VALUE FOR LCURLY recursive:s SEMI RCURLY  {: RESULT = new ForeachInstruction(e, i, s.getSimplein()); :}
             ;
 
-while_stat ::= bool_expr:c WHILE LCURLY recursive:s SEMI RCURLY   {: RESULT = new WhileInstruction(c, s.getSimplein()); :}
+while_stat ::= expr_or_bool:c WHILE LCURLY recursive:s SEMI RCURLY   {: RESULT = new WhileInstruction(c, s.getSimplein()); :}
             ;
 
 output_stat ::= YAZ LPAREN expr:e RPAREN               {: RESULT = new OutputInstruction(e); :}

@@ -103,7 +103,8 @@ class PlusOperator implements Operator {
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			return (Integer)v1 + (Integer)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!" +
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return 0;
 		}
@@ -118,7 +119,8 @@ class TimesOperator implements Operator {
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			return (Integer)v1 * (Integer)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return 0;
 		}
@@ -133,7 +135,8 @@ class MinusOperator implements Operator {
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			return (Integer)v1 - (Integer)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return 0;
 		}
@@ -148,12 +151,13 @@ class DivideOperator implements Operator {
 		Object v2 = e2.run(hm);
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			if ((Integer)v2 == 0) {
-				System.out.println("Error: division by zero");
+				System.out.println("HATA: 0'a bölme işlemi yapıldı!");
 				System.exit(1);
 			}
 			return (Integer)v1 / (Integer)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return 0;
 		}
@@ -168,12 +172,13 @@ class ModeOperator implements Operator {
 
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			if ((Integer)v2 == 0) {
-				System.out.println("Error: division by zero");
+				System.out.println("HATA: 0'a bölme işlemi yapıldı!");
 				System.exit(1);
 			}
 			return (Integer)v1 % (Integer)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return 0;
 		}
@@ -243,7 +248,6 @@ class IntEnterExpression implements Expr {
 	public Object run(HashMap<String, Object> hm) {
 		Scanner scanner = new Scanner(System.in);
 		int input = scanner.nextInt();
-
 		return new IntValueExpression(new Expr() {
 			@Override
 			public Object run(HashMap<String, Object> hm) {
@@ -288,7 +292,8 @@ class UMinusExpression implements Expr
 		if (v instanceof Integer) {
 			return -((Integer)v);
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return 0;
 		}
@@ -310,7 +315,8 @@ class STRLengthExpression implements Expr
 		if (v instanceof String) {
 			return ((String)v).length();
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak kelime giriniz.");
 			System.exit(1);
 			return 0;
 		}
@@ -340,7 +346,8 @@ class STRPositionExpression implements Expr
 			int pos = s.indexOf(s2);
 			return (pos != -1) ? pos + 1 : 0;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak kelime giriniz.");
 			System.exit(1);
 			return 0;
 		}
@@ -362,8 +369,12 @@ class EqCond implements Condition
 		else if (v1 instanceof String && v2 instanceof String) {
 			return ((String)v1).equals((String)v2);
 		}
+		else if(v1 instanceof Boolean && v2 instanceof Boolean){
+			return ((Boolean)v1).equals((Boolean)v2);
+		}
 		else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı ile sayı, kelime ile kelime veya boolean ile boolean giriniz.");
 			System.exit(1);
 			return false;
 		}
@@ -381,7 +392,8 @@ class LtCond implements Condition
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			return (Integer)v1 < (Integer)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return false;
 		}
@@ -398,7 +410,8 @@ class LeCond implements Condition
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			return (Integer)v1 <= (Integer)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return false;
 		}
@@ -415,7 +428,8 @@ class GtCond implements Condition
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			return (Integer)v1 > (Integer)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return false;
 		}
@@ -432,7 +446,8 @@ class GeCond implements Condition
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			return (Integer)v1 >= (Integer)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı giriniz.");
 			System.exit(1);
 			return false;
 		}
@@ -448,61 +463,64 @@ class NeCond implements Condition
 
 		if (v1 instanceof Integer && v2 instanceof Integer) {
 			return (Integer)v1 != (Integer)v2;
-		} else {
-			System.out.println("Error: wrong objects type");
-			System.exit(1);
-			return false;
 		}
-	}
-}
-
-class StrEqCond implements Condition
-{
-	public boolean test(Expr e1, Expr e2, HashMap<String, Object> hm) {
-
-		Object v1 = e1.run(hm);
-		Object v2 = e2.run(hm);
-
-		if (v1 instanceof String && v2 instanceof String) {
-			return ((String)v1).equals((String)v2);
-		} else {
-			System.out.println("Error: wrong objects type");
-			System.exit(1);
-			return false;
-		}
-	}
-}
-
-class StrNotEqCond implements Condition
-{
-	public boolean test(Expr e1, Expr e2, HashMap<String, Object> hm) {
-
-		Object v1 = e1.run(hm);
-		Object v2 = e2.run(hm);
-
-		if (v1 instanceof String && v2 instanceof String) {
+		else if (v1 instanceof String && v2 instanceof String) {
 			return !((String)v1).equals((String)v2);
-		} else {
-			System.out.println("Error: wrong objects type");
+		}
+		else if(v1 instanceof Boolean && v2 instanceof Boolean){
+			return !((Boolean)v1).equals((Boolean)v2);
+
+		}
+		else
+		{
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sayı ile sayı, kelime ile kelime veya boolean ile boolean giriniz.");
 			System.exit(1);
 			return false;
 		}
 	}
 }
+
+
 
 /** BOOLEAN OPERATIONS */
+class BooleanAssignInstruction implements SimpleInstruction
+{
+	String name;
+	Expr val;
+
+	public BooleanAssignInstruction(String i, Expr e)
+	{
+		name = i;
+		val = e;
+	}
+
+	public void run(HashMap<String, Object> hm)
+	{
+		boolean booleanValue = (boolean) val.run(hm);
+		hm.put(name, booleanValue);
+
+	}
+}
+
 class BooleanExpression implements Expr
 {
-	Boolean value;
+	boolean value;
 
-	public BooleanExpression(Boolean e)
+	public BooleanExpression(boolean e)
 	{
 		value = e;
 	}
+	@Override
 
 	public Object run(HashMap<String, Object> hm)
 	{
-		return value;
+		if(value == true){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }
 
@@ -658,7 +676,7 @@ class ListAdd implements SimpleInstruction {
 			}
 		}
 		else {
-			System.out.println("HATA: yanlış obje tipi.");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+"\n"+"Lütfen liste türünde bir nesne kullanınız.");
 			System.exit(1);
 			return;
 		}
@@ -696,7 +714,8 @@ class ListGet implements Expr {
 			}
 		}
 		else {
-			System.out.println("HATA: yanlış obje tipi.");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"
+					+"\n"+"Lütfen liste türünde bir nesne kullanınız.");
 			System.exit(1);
 		}
 
@@ -706,7 +725,7 @@ class ListGet implements Expr {
 		}
 		else{
 			if(newValue == null)
-				System.out.println("HATA: Sayı olması gereken yerde farklı obje bulunmakta.");
+				System.out.println("HATA: Sayı olması gereken yerde farklı nesne bulunmakta.");
 			if(newValue instanceof ArrayList)
 				System.out.println("HATA: Sayı olması gereken yerde liste bulunmakta.");
 			if(newValue instanceof String)
@@ -745,7 +764,8 @@ class ListRemove implements SimpleInstruction {
 			}
 		}
 		else {
-			System.out.println("HATA: yanlış obje tipi.");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"
+					+"\n"+"Lütfen liste türünde bir nesne kullanınız.");
 			System.exit(1);
 			return;
 		}
@@ -782,7 +802,8 @@ class ListLength implements Expr {
 			}
 		}
 		else {
-			System.out.println("HATA: yanlış obje tipi.");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"
+					+"\n"+"Lütfen liste türünde bir nesne kullanınız.");
 			System.exit(1);
 		}
 
@@ -816,7 +837,8 @@ class ListClear implements SimpleInstruction {
 			}
 		}
 		else {
-			System.out.println("HATA: yanlış obje tipi.");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"
+					+"\n"+"Lütfen liste türünde bir nesne kullanınız.");
 			System.exit(1);
 			return;
 		}
@@ -856,7 +878,8 @@ class ListUpdate implements SimpleInstruction {
 			}
 		}
 		else {
-			System.out.println("HATA: yanlış obje tipi.");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"
+					+"\n"+"Lütfen liste türünde bir nesne kullanınız.");
 			System.exit(1);
 			return;
 		}
@@ -897,7 +920,8 @@ class ListIndex implements Expr {
 			}
 		}
 		else {
-			System.out.println("HATA: yanlış obje tipi.");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"
+					+"\n"+"Lütfen liste türünde bir nesne kullanınız.");
 			System.exit(1);
 		}
 
@@ -942,13 +966,17 @@ class StrValueExpression implements Expr {
 	public String toString() {
 		return value.toString();
 	}
+	public String getStrValue(HashMap<String, Object> hm) {
+		return ((String) value.run(hm)).toString();
+	}
+
 }
 
 class StrEnterExpression implements Expr {
 
 	public Object run(HashMap<String, Object> hm) {
 		Scanner scanner = new Scanner(System.in);
-		String input = scanner.next();
+		String input = scanner.nextLine();
 		return new StrValueExpression(new Expr() {
 			@Override
 			public Object run(HashMap<String, Object> hm) {
@@ -958,7 +986,7 @@ class StrEnterExpression implements Expr {
 			public String toString() {
 				return "\"" + input + "\""; // Add quotes to the string representation
 			}
-		});
+		}).getStrValue(hm);
 	}
 }
 
@@ -980,7 +1008,8 @@ class ConcatStringExpression implements Expr
 		if (v1 instanceof String && v2 instanceof String) {
 			return (String)v1 + (String)v2;
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak kelime giriniz.");
 			System.exit(1);
 			return null;
 		}
@@ -1020,7 +1049,8 @@ class SubStringExpression implements Expr
 				return new String(s.substring(pos-1, pos+length-1));
 			}
 		} else {
-			System.out.println("Error: wrong objects type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak sırasıyla kelime, sayı ve sayı giriniz.");
 			System.exit(1);
 			return null;
 		}
@@ -1040,7 +1070,19 @@ class OutputInstruction implements SimpleInstruction
 
 	public void run(HashMap<String, Object> hm)
 	{
-		System.out.println(expr.run(hm));
+
+		if(expr.run(hm) instanceof  Boolean){
+			if(expr.run(hm).equals(true)){
+				System.out.println("doğru");
+			}
+			else if(expr.run(hm).equals(false)){
+				System.out.println("yanlış");
+			}
+
+		}
+		else{
+			System.out.println(expr.run(hm));
+		}
 
 	}
 }
@@ -1233,12 +1275,9 @@ class ForInstruction implements ForInstructionI{
 			i += ((Integer)e3.run(hm)).intValue();
 
 		}
-
-
 	}
 }
 class ForInstruction2 implements ForInstructionI{
-
 	String name;
 	Expr e1;
 	Expr e2;
@@ -1373,7 +1412,8 @@ class ForeachInstruction implements ForeachInstructionI{
 			}
 		}
 		else {
-			System.out.println("Error: wrong object type");
+			System.out.println("HATA: Yanlış nesne türü kullanıldı!"+
+					" \n " + "Lütfen nesne türü olarak liste giriniz.");
 			System.exit(1);
 			return;
 		}
@@ -1838,7 +1878,7 @@ class CallFunction implements FunctionInstructionI {
 			}
 		}
 
-		/** burası parametre **/
+		/** Parameters **/
 		if(listA.get(0) instanceof ArrayList){
 
 			ArrayList<?> tempList = (ArrayList<?>) listA.get(0);
@@ -1852,7 +1892,7 @@ class CallFunction implements FunctionInstructionI {
 			}
 		}
 
-		/** burası simpleinstruction **/
+		/** simpleinstruction **/
 
 		if(listA.get(1) instanceof ArrayList){
 
@@ -1867,9 +1907,6 @@ class CallFunction implements FunctionInstructionI {
 		}
 
 
-
-
-		/** burası çalıştırmak için function'ı comment kısımları sadece çalışıyor mu diye bakmak için **/
 		HashMap<String, Object> variables = new HashMap<>();
 		for(int i = 0 ; i < listParam.size(); i++){
 			variables.put(listParam.get(i), recursiveID.get(i).run(hm));
@@ -1916,7 +1953,7 @@ class CallReturnFunction implements Expr {
 			}
 		}
 
-		/** burası parametre **/
+		/** parameters **/
 		if(listA.get(0) instanceof ArrayList){
 
 			ArrayList<?> tempList = (ArrayList<?>) listA.get(0);
@@ -1930,7 +1967,7 @@ class CallReturnFunction implements Expr {
 			}
 		}
 
-		/** burası simpleinstruction **/
+		/** simpleinstruction **/
 
 		if(listA.get(1) instanceof ArrayList){
 
@@ -1949,7 +1986,7 @@ class CallReturnFunction implements Expr {
 		}
 
 
-		/** burası çalıştırmak için function'ı comment kısımları sadece çalışıyor mu diye bakmak için **/
+
 		HashMap<String, Object> variables = new HashMap<>();
 
 		for(int i = 0 ; i < listParam.size(); i++){
@@ -1961,6 +1998,27 @@ class CallReturnFunction implements Expr {
 
 		return temp.run(variables);
 
+	}
+}
+
+class RandomExpression implements Expr
+{
+	Expr min;
+	Expr max;
+
+	public RandomExpression(Expr min, Expr max)
+	{
+		this.min = min;
+		this.max = max;
+	}
+
+	@Override
+	public Object run(HashMap<String, Object> hm)
+	{
+		int minValue = (int) min.run(hm);
+		int maxValue = (int) max.run(hm);
+		int randomNumber = minValue + (int)(Math.random() * ((maxValue - minValue) + 1));
+		return randomNumber;
 	}
 }
 

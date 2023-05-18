@@ -1,19 +1,44 @@
 başla
 
-
-eğer doğru ise{
-yaz("doğru");
+input = sayıyı oku;
+yaz(input);
+a=doğru;
+c=doğru;
+yaz(a);
+eğer (a eşit doğru) ise{
+    yaz("a doğru");
 };
 
-dg = doğru;
-yaz(dg);
+eğer(a == yanlış) ise{
+     yaz("a yanlış");
+};
+eğer(a == c) ise{
+    yaz("a'c 'ye eşittir");
+};
+
+b=yanlış;
+yaz(b);
+eğer (b == doğru) ise{
+    yaz("b yanlış, not b doğru ");
+};
+
+
+
+
+
+
+
+
+
+
+***
 
 	a = 1;
 	b = 2;
 	c = a + b;
     yaz (c);
 
-*** BU BİR YORUM SATIRIDIR
+ BU BİR YORUM SATIRIDIR
 
 
 yaz("readstr değeri gir");
@@ -26,7 +51,7 @@ yaz("Şimdi readint yazdırılacak");
 yaz(bbb);
 yaz(10+bbb);
 
-***
+
 
 
 g değişkeni 20 ile 40 arasında 5 artarken {
@@ -95,17 +120,14 @@ yaz(d);
     yaz("olduu");
  };
 
+***
 
-k,l ile topla işi {
-   sonuc = k+l;
-   yaz(sonuc);
-   sonuc döndür;
-};
 
-3,4 ile topla;
 
-a = çağır 3,4 ile topla;
 
-yaz(a);
+
+
+
+
 
 bitir
