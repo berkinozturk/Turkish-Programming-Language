@@ -1109,6 +1109,7 @@ class InstructionList
 	}
 }
 
+/** WHILE */
 class WhileInstruction implements WhileInstructionI {
 	Expr cond;
 	private List<SimpleInstruction> si;
@@ -1121,6 +1122,7 @@ class WhileInstruction implements WhileInstructionI {
 	public void run(HashMap<String, Object> hm) {
 		boolean isBreakEncountered = false;
 		boolean isContinueEncountered = false;
+		boolean isContinueExecuted = false;
 
 		while ((Boolean)cond.run(hm) && (!isBreakEncountered || !isContinueEncountered)) {
 			for(int i = 0; i < si.size(); i++) {
@@ -1164,12 +1166,18 @@ class WhileInstruction implements WhileInstructionI {
 						continue;
 					}
 				}
+
+				if(!isContinueExecuted && isContinueEncountered){
+					isContinueExecuted=true;
+					break;
+				}
 			}
 		}
 
 	}
 }
 
+/** FOR LOOP */
 
 class ForInstruction implements ForInstructionI{
 
@@ -1177,9 +1185,11 @@ class ForInstruction implements ForInstructionI{
 	Expr e1;
 	Expr e2;
 	Expr e3;
+
 	private List<SimpleInstruction> recursiveList;
 	boolean isBreakEncountered = false; //break control variable
 	boolean isContinueEncountered = false;
+	boolean isContinueExecuted = false;
 
 	public ForInstruction(String name, Expr e1, Expr e2, Expr e3, ArrayList<SimpleInstruction> recursiveList){
 		this.name = name;
@@ -1201,8 +1211,11 @@ class ForInstruction implements ForInstructionI{
 		while (i <= ((Integer)e2.run(hm)).intValue() && (!isBreakEncountered || !isContinueEncountered)){
 
 			hm.put(name, i);
+
 			for(int j = 0; j < recursiveList.size(); j++){
+
 				recursiveList.get(j).run(hm);
+
 				if(recursiveList.get(j) instanceof BreakInstruction){ //break control
 					isBreakEncountered= true;
 					break;
@@ -1233,51 +1246,55 @@ class ForInstruction implements ForInstructionI{
 						isBreakEncountered = true;
 						break;
 					}
-					else if (elseinst.isContinueEncountered) {
-						isContinueEncountered=true;
-						continue;
-					}
 				}
 				//continue
 				if (recursiveList.get(j) instanceof ContinueInstruction) {
 					isContinueEncountered=true;
-					continue;
+
+
 				}
 				else if (recursiveList.get(j) instanceof IfInstruction) {
 					IfInstruction ifInst = (IfInstruction) recursiveList.get(j);
 					if (ifInst.isContinueEncountered) {
 						isContinueEncountered=true;
-						continue;
+
 					}
 				}
 				else if (recursiveList.get(j) instanceof IfElseInstruction) {
 					IfElseInstruction ifelseInst = (IfElseInstruction) recursiveList.get(j);
 					if (ifelseInst.isContinueEncountered) {
 						isContinueEncountered=true;
-						continue;
+
 					}
 				}
 				else if (recursiveList.get(j) instanceof IfElseIfInstruction) {
 					IfElseIfInstruction ifelseifInst = (IfElseIfInstruction) recursiveList.get(j);
 					if (ifelseifInst.isContinueEncountered) {
 						isContinueEncountered=true;
-						continue;
+
 					}
 				}
 				else if (recursiveList.get(j) instanceof ElseInstruction) {
 					ElseInstruction elseinst = (ElseInstruction) recursiveList.get(j);
 					if (elseinst.isContinueEncountered) {
 						isContinueEncountered=true;
-						continue;
+
 					}
 				}
-			}
-			i += ((Integer)e3.run(hm)).intValue();
 
+				if(!isContinueExecuted && isContinueEncountered){
+					isContinueExecuted=true;
+					break;
+				}
+			}
+			i += ((Integer) e3.run(hm)).intValue();
 		}
+
 	}
 }
+
 class ForInstruction2 implements ForInstructionI{
+
 	String name;
 	Expr e1;
 	Expr e2;
@@ -1285,6 +1302,7 @@ class ForInstruction2 implements ForInstructionI{
 	private List<SimpleInstruction> recursiveList;
 	boolean isBreakEncountered = false; //break control variable
 	boolean isContinueEncountered = false;
+	boolean isContinueExecuted = false;
 
 	public ForInstruction2(String name, Expr e1, Expr e2, Expr e3, ArrayList<SimpleInstruction> recursiveList){
 		this.name = name;
@@ -1374,6 +1392,11 @@ class ForInstruction2 implements ForInstructionI{
 						continue;
 					}
 				}
+
+				if(!isContinueExecuted && isContinueEncountered){
+					isContinueExecuted=true;
+					break;
+				}
 			}
 
 			i -= ((Integer)e3.run(hm)).intValue();
@@ -1382,7 +1405,6 @@ class ForInstruction2 implements ForInstructionI{
 
 	}
 }
-
 class ForeachInstruction implements ForeachInstructionI{
 
 	Expr e;

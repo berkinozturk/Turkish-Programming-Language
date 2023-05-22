@@ -156,6 +156,10 @@ list_content ::=  list_content:a  COMMA   expr:e      {: a.add(e); RESULT = a;:}
 list_stat ::= LIST LPAREN list_content:e RPAREN {:
     RESULT = new ListExpr(e.getExpr());
                 :}
+                | LIST LPAREN RPAREN {:
+                ArrayList<Expr> val = new ArrayList<>();
+                RESULT = new ListExpr(val);
+                :}
                 ;
 
 list_add ::= expr:e TOLIST expr:e1 LISTADD {: RESULT = new ListAdd(e,e1);:};

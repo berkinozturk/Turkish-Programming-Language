@@ -1,132 +1,80 @@
 başla
 
-input = sayıyı oku;
-yaz(input);
-a=doğru;
-c=doğru;
-yaz(a);
-eğer (a eşit doğru) ise{
-    yaz("a doğru");
-};
+*** eğer-ya da-değil ise ***
+yaz("Yaşınızı giriniz");
+yas = sayıyı oku;
 
-eğer(a == yanlış) ise{
-     yaz("a yanlış");
-};
-eğer(a == c) ise{
-    yaz("a'c 'ye eşittir");
-};
-
-b=yanlış;
-yaz(b);
-eğer (b == doğru) ise{
-    yaz("b yanlış, not b doğru ");
-};
-
-
-
-
-
-
-
-
-
-
-***
-
-	a = 1;
-	b = 2;
-	c = a + b;
-    yaz (c);
-
- BU BİR YORUM SATIRIDIR
-
-
-yaz("readstr değeri gir");
-oku = readstr;
-yaz(oku);
-
-yaz("readint değeri gir");
-bbb = readint;
-yaz("Şimdi readint yazdırılacak");
-yaz(bbb);
-yaz(10+bbb);
-
-
-
-
-g değişkeni 20 ile 40 arasında 5 artarken {
-    eğer (g==20) ise {
-        yaz("irem");
-        atla;
-    }
-    ya da (g == 25) ise {
-        yaz(g);
-        kır;
-    }
-    ya da (g == 30) ise {
-        yaz(g);
-        yaz("kirilmadi");
-    };
-    };
-
-
-d =  liste (3,7,44444,5,5,4,3,787);
-e =  liste ("bısdufs","sdfgsdf", "sfsdfsd", 3444);
-
-yaz(d);
-yaz(d listesinin uzunluğu);
-yaz(d listesindeki 787 elemanının sırası);
-d listesine "nese" ekle;
-yaz(d);
-
-xx = d listesindeki 3. eleman;
-yaz("d listesinin 3. elemanı yazdırılacak");
-yaz(xx);
-
-d listesinin 0. elemanı = 4;
-yaz("DEGER DEGISTI: ");
-yaz(d);
-
-yaz("d listesinin 7. elemanı silinecek");
-d listesindeki 7. elemanı sil;
-yaz(d);
-
-temizlenecek = liste ( 1,2,3,4,5);
-yaz(temizlenecek);
-temizlenecek listesini temizle;
-yaz(temizlenecek);
-
-
-rr değişkeni 1 ile 10 arasında 1 artarken {
-d listesine 200 ekle;
-};
-
-
-d içindeki her i değeri için{
-    yaz(i);
-};
-
-yaz(d);
-
- h=20;
- t=10;
- eğer (h==21) ise {
-    yaz(g);
- }
- ya da (t==10) ise {
-    yaz("görüyor mu?");
- }
+eğer (yas>=18) ise {
+    yaz("Araba ve motosiklet ehliyeti alabilirsiniz");
+}
+ya da (yas>=16) ise {
+    yaz("Motosiklet ehliyeti alabilirsiniz");
+}
  değil ise {
-    yaz("olduu");
- };
-
-***
+    yaz("Hiçbir ehliyet alamazsınız");
+};
 
 
+*** Listeler ve olduğu sürece döngüsü ***
+filmler = liste ("Soul", "Sindirella", "Mulan", "Mega Zeka", "Rapunzel", "Moana", "Zootopia", "Arabalar");
+
+a=1;
+(a==1) olduğu sürece{
+    yaz("yapmak istediğiniz işlemi yazınız: yazdir-ekle-sil-kapat");
+    komut = kelimeyi oku;
+    eğer (komut == "yazdir") ise {
+        yaz(filmler);
+    }
+    ya da (komut == "ekle") ise {
+        yaz("Eklemek istediğiniz filmin ismini yazın: ");
+        eklenecek = kelimeyi oku;
+        filmler listesine eklenecek ekle;
+        yaz(filmler);
+    }
+    ya da (komut == "sil") ise{
+        yaz("Silmek istediğiniz filmin ismini yazın: ");
+        silinecek = kelimeyi oku;
+        siraNo = filmler listesindeki silinecek elemanının sırası;
+        filmler listesindeki siraNo. elemanı sil;
+        yaz(filmler);
+
+    }
+    ya da (komut == "kapat") ise{
+        yaz("Programdan çıkış yapılıyor...");
+        a=0; ***burada kır düzgün çalışmadığı için böyle yaptım ***
+    }
+     değil ise {
+        yaz("geçersiz bir komut girdiniz");
+    };
+};
+
+*** For döngüsü ***
+toplam=0;
+x değişkeni 1 ile 10 arasında 1 artarken {
+    toplam = toplam + x;
+};
+yaz("1'den 10'a kadar olan sayıların toplamı:");
+yaz(toplam);
+
+*** For-each döngüsü ***
+L =  liste (3,7,40,5,2,4,3,77);
+toplam = 0;
+L içindeki her i değeri için{
+    yaz(i);
+    toplam=toplam+i;
+};
+yaz(toplam);
+
+*** Function without return ***
+a ile merhaba işi {
+  yaz("merhaba");
+  yaz(a);
+};
+yaz("isminizi giriniz");
+isim = kelimeyi oku;
 
 
-
-
+isim ile merhaba;
 
 
 
