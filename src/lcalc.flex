@@ -36,15 +36,12 @@ STRING = \"([^\\\"]|\\.)*\"
     /** Keywords. */
     "ve"              { return symbol(sym.AND); }
     "veya"            { return symbol(sym.OR); }
-    "not"             { return symbol(sym.NOT); }
     "doğru"           { return symbol(sym.TRUE); }
     "yanlış"          { return symbol(sym.FALSE); }
-
     "başla"           { return symbol(sym.BEGIN); }
     "bitir"           { return symbol(sym.END); }
-    "exit"            { return symbol(sym.EXIT); }
-
-    "rastgele"         { return symbol(sym.RANDOM); }
+    "çıkış yap"       { return symbol(sym.EXIT); }
+    "rastgele"        { return symbol(sym.RANDOM); }
     "eğer"            { return symbol(sym.EGER); }
     "ise"             { return symbol(sym.ISE); }
     "ya da"           { return symbol(sym.YADA); }
@@ -58,15 +55,12 @@ STRING = \"([^\\\"]|\\.)*\"
     "azalırken"       { return symbol(sym.AZ); }
     "işi"             { return symbol(sym.FUNCTION); }
     "döndür"          { return symbol(sym.RETURN); }
-
-    "çağır"    { return symbol(sym.CAGIR); }
-
+    "çağır"           { return symbol(sym.CAGIR); }
     "içindeki"        { return symbol(sym.INSIDE); }
     "her"             { return symbol(sym.EVERY); }
     "değeri"          { return symbol(sym.VALUE); }
     "için"            { return symbol(sym.FOR); }
     "yaz"             { return symbol(sym.YAZ); }
-
     "eleman"                { return symbol(sym.VARIABLE); }
     "listesine"             { return symbol(sym.TOLIST); }
     "listesindeki"          { return symbol(sym.LISTGET); }
@@ -77,15 +71,14 @@ STRING = \"([^\\\"]|\\.)*\"
     "listesinin uzunluğu"   { return symbol(sym.LISTLENGTH); }
     "listesini temizle"     { return symbol(sym.LISTCLEAR); }
     "elemanının sırası"     { return symbol(sym.LISTINDEX); }
-
-  "sayıyı oku"            { return symbol(sym.READINT); }
+    "sayıyı oku"            { return symbol(sym.READINT); }
     "kelimeyi oku"          { return symbol(sym.READSTR); }
     "uzunluğunu al"         { return symbol(sym.LENGTH); }/** */
-    "pozisyon"        { return symbol(sym.POSITION); } /** */
-    "birleştir"       { return symbol(sym.CONCATENATE); }
-    "aralığını göster"       { return symbol(sym.SUBSTRING); }
-    "atla"            { return symbol(sym.CONTINUE); }
-    "kır"             { return symbol(sym.BREAK); }
+    "pozisyon"          { return symbol(sym.POSITION); } /** */
+    "birleştir"         { return symbol(sym.CONCATENATE); }
+    "aralığını göster"  { return symbol(sym.SUBSTRING); }
+    "atla"              { return symbol(sym.CONTINUE); }
+    "kır"               { return symbol(sym.BREAK); }
 
     "="               {return symbol(sym.ASSIGN); }
     "=="              { return symbol(sym.EQ); }
@@ -97,8 +90,8 @@ STRING = \"([^\\\"]|\\.)*\"
     "{"               { return symbol(sym.LCURLY); }
     "}"               { return symbol(sym.RCURLY); }
 
-    "eşit"              { return symbol(sym.STREQ); }
-    "eşit değil"        { return symbol(sym.STRNOTEQ); }
+    "eşit"            { return symbol(sym.STREQ); }
+    "eşit değil"      { return symbol(sym.STRNOTEQ); }
 
     "."                { return symbol(sym.DOT); }
     ";"                { return symbol(sym.SEMI); }
@@ -114,11 +107,11 @@ STRING = \"([^\\\"]|\\.)*\"
     {NUM}            { return symbol(sym.NUM, new Integer(yytext())); }
     {IDENT}          { return symbol(sym.IDENT, new String(yytext()));}
     {STRING}         { return symbol(sym.STRING, new String(yytext())); }
-    {Comment}                      { /* ignore */ }
-    {WhiteSpace}       { /* do nothing */ }
-    <<EOF>> { return symbol(sym.EOF); }
+    {Comment}        { /* ignore */ }
+    {WhiteSpace}     { /* do nothing */ }
+    <<EOF>>          { return symbol(sym.EOF); }
 }
 
 
 /* error */
-[^]                    { throw new Error("Illegal character <"+yytext()+">"); }
+[^]                 { throw new Error("Illegal character <"+yytext()+">"); }
