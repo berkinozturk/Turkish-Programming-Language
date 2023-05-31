@@ -49,7 +49,7 @@ terminal           FUNCTION, RETURN;
 
 terminal           YAZ, READINT, LENGTH, POSITION, READSTR, CONCATENATE, SUBSTRING, LIST;  // commands
 terminal           ASSIGN;
-terminal   	       EQ, LT, LE, GT, GE, NE; // num_rel
+terminal   	       EQ, LT, LE, GT, GE, NE, NOT; // num_rel
 terminal    	   STREQ, STRNOTEQ; //str_rel
 terminal    	   ART,AZ;
 terminal           CAGIR;
@@ -75,7 +75,6 @@ non terminal Expr call_return_function;
 non terminal Expr expr_or_bool;
 non terminal Expr random_expr;
 
-
 non terminal Operator num_op;
 non terminal Condition num_rel;
 non terminal Condition str_rel;
@@ -86,6 +85,7 @@ non terminal ListContent list_content;
 non terminal ElseIfContent if_content;
 non terminal SimpleInstruction break_stat;
 non terminal SimpleInstruction continue_stat;
+non terminal SimpleInstruction exit_stat;
 
 non terminal SimpleInstruction assign_stat;
 non terminal SimpleInstruction if_stat;
@@ -110,13 +110,9 @@ non terminal RecursiveID recursive_id;
 /** Precedence */
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODE;
-
 precedence left OR, AND;
-precedence left NOT;
 
-precedence left DEGIL;
 precedence left YADA;
-
 precedence left LISTREMOVE;
 precedence left LISTGET;
 precedence left LISTLENGTH;
@@ -125,13 +121,12 @@ precedence left SEMI;
 precedence left LCURLY;
 precedence left CAGIR;
 
-
+precedence left DEGIL;
 
 start with program;
 
 /** ============= GRAMMAR ============= */
 
-/** done */
 num_op ::= PLUS             {: RESULT = new PlusOperator(); :}
          | MINUS            {: RESULT = new MinusOperator(); :}
          | TIMES            {: RESULT = new TimesOperator(); :}
@@ -231,12 +226,13 @@ num_rel ::=   EQ         {: RESULT = new EqCond(); :}
 str_rel ::= STREQ     {: RESULT = new EqCond(); :}
           | STRNOTEQ  {: RESULT = new NeCond(); :}
           ;
+
 expr_or_bool ::= expr:e        {: RESULT = e; :}
                  | bool_expr:e {: RESULT = e; :};
 bool_expr ::= TRUE                               {: RESULT = new BooleanExpression(true); :}
             | FALSE                              {: RESULT = new BooleanExpression(false); :}
             | LPAREN bool_expr:e RPAREN          {: RESULT = new PBooleanExpression(e); :}
-            | expr_or_bool:e DEGIL               {: RESULT = new NegationBooleanExpression(e); :}
+            | NOT expr_or_bool:e                {: RESULT = new NegationBooleanExpression(e); :}
             | bool_expr:e AND bool_expr:e2       {: RESULT = new AndBooleanExpression(e, e2); :}
             | bool_expr:e OR bool_expr:e2        {: RESULT = new OrBooleanExpression(e, e2); :}
             | expr: e num_rel:o expr_or_bool:e2  {: RESULT = new ConditionBooleanExpression(e, o, e2); :}
@@ -251,6 +247,7 @@ simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | for_stat:si                      {: RESULT = si; :}
               | foreach_stat:si                  {: RESULT = si; :}
               | function_stat:si                 {: RESULT = si; :}
+              | exit_stat : si                   {: RESULT = si; :}
               | call_function:si                 {: RESULT = si; :}
               | BEGIN instr:si SEMI END          {: RESULT = new BeginEndInstruction(si); :}
               | output_stat:si                   {: RESULT = si; :}
@@ -258,22 +255,23 @@ simple_instr ::= assign_stat:si                  {: RESULT = si; :}
               | list_remove:si                   {: RESULT = si; :}
               | list_clear:si                    {: RESULT = si; :}
               | list_update:si                   {: RESULT = si; :}
-              | EXIT                             {: System.exit(0); :}
               ;
 
+exit_stat ::= EXIT {: RESULT = new SimpleExit(); :}
+            ;
+
 random_expr ::= RANDOM LPAREN expr:e COMMA expr:e1 RPAREN  {:  RESULT = new RandomExpression(e,e1);:}
- ;
+            ;
 instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
         | simple_instr:si                        {: RESULT = new InstructionList(si); :}
         ;
 
 assign_stat ::= IDENT:i ASSIGN expr:e            {: RESULT = new AssignInstruction(i,e); :}
              | IDENT:i ASSIGN bool_expr:e        {: RESULT = new BooleanAssignInstruction(i, e); :}
-        ;
+            ;
 
 recursive::= recursive:i SEMI simple_instr:si     {: i.add(si); RESULT = i; :}
            | simple_instr:si                      {: RESULT = new Recursive(si); :}
-
           ;
 
 if_stat ::= EGER expr_or_bool:c ISE LCURLY recursive:s SEMI RCURLY {: RESULT = new IfInstruction(c, s.getSimplein()); :}
@@ -312,7 +310,7 @@ function_stat::=  recursive_id:i ILE IDENT:e FUNCTION LCURLY recursive:si SEMI R
 
 recursive_id ::=  recursive_id:a  COMMA   expr:e    {: a.add(e); RESULT = a;:}  //sonsuz expr
                  | expr:e                           {: RESULT = new RecursiveID(e);:}
-                        ;
+                 ;
 
 return_function::= expr:e RETURN SEMI {: RESULT = new ReturnInstruction(e); :}
             ;

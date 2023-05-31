@@ -1,6 +1,7 @@
 başla
 
 *** eğer-ya da-değil ise ***
+
 yaz("Yaşınızı giriniz");
 yas = sayıyı oku;
 
@@ -12,6 +13,8 @@ ya da (yas>=16) ise {
 }
  değil ise {
     yaz("Hiçbir ehliyet alamazsınız");
+    çıkış yap;
+
 };
 
 

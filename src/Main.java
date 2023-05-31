@@ -73,6 +73,15 @@ class ID implements Expr
 	}
 }
 
+class SimpleExit implements SimpleInstruction
+{
+	public void run(HashMap<String, Object> hm)
+	{
+		System.exit(0);
+
+	}
+}
+
 class AssignInstruction implements SimpleInstruction
 {
 	String name;
