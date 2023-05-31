@@ -261,6 +261,7 @@ exit_stat ::= EXIT {: RESULT = new SimpleExit(); :}
             ;
 
 random_expr ::= RANDOM LPAREN expr:e COMMA expr:e1 RPAREN  {:  RESULT = new RandomExpression(e,e1);:}
+            | RANDOM LPAREN expr:e RPAREN {: RESULT = new RandomExpressionList(e);:}
             ;
 instr ::= instr:i SEMI simple_instr:si           {: i.add(si); RESULT = i; :}
         | simple_instr:si                        {: RESULT = new InstructionList(si); :}

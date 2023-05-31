@@ -2016,8 +2016,6 @@ class CallReturnFunction implements Expr {
 			temp = (Expr) listA.get(2);
 		}
 
-
-
 		HashMap<String, Object> variables = new HashMap<>();
 
 		for(int i = 0 ; i < listParam.size(); i++){
@@ -2053,6 +2051,37 @@ class RandomExpression implements Expr
 	}
 }
 
+
+class RandomExpressionList implements Expr
+{
+	Expr list;
+	public RandomExpressionList(Expr list)
+	{
+		this.list = list;
+	}
+	@Override
+	public Object run(HashMap<String, Object> hm)
+	{
+		Object _list = list.run(hm);
+		ArrayList<Object> listA = new ArrayList<Object>();
+
+		if(_list instanceof ArrayList){
+			listA = (ArrayList<Object>) _list;
+		}
+		else if(_list.getClass().isArray()) {
+			listA = new ArrayList<>();
+			int length = Array.getLength(_list);
+			for(int i = 0; i < length; i++) {
+				listA.add(Array.get(_list, i));
+			}
+		}
+		Random rand = new Random();
+		Object random = listA.get(rand.nextInt(listA.size()));
+
+		return random;
+
+	}
+}
 
 class BeginEndInstruction implements SimpleInstruction {
 	private InstructionList instructions;

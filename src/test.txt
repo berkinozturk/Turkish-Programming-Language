@@ -1,84 +1,17 @@
 başla
 
-*** eğer-ya da-değil ise ***
+list = liste(1,2,3,4, "aaa", "bbb", "ccc");
+int = rastgele(list);
+yaz(int);
 
-yaz("Yaşınızı giriniz");
-yas = sayıyı oku;
-
-eğer (yas>=18) ise {
-    yaz("Araba ve motosiklet ehliyeti alabilirsiniz");
+sifre = rastgele(2,10);
+yaz("Şifre 2 ile 10 arasında bir sayı. Tahmin et:");
+tahmin = sayıyı oku;
+eğer(tahmin == sifre) ise {
+yaz("Doğru tahmin!");
 }
-ya da (yas>=16) ise {
-    yaz("Motosiklet ehliyeti alabilirsiniz");
-}
- değil ise {
-    yaz("Hiçbir ehliyet alamazsınız");
-    çıkış yap;
-
+değil ise {
+yaz("Yanlış tahmin :(");
 };
-
-
-*** Listeler ve olduğu sürece döngüsü ***
-filmler = liste ("Soul", "Sindirella", "Mulan", "Mega Zeka", "Rapunzel", "Moana", "Zootopia", "Arabalar");
-
-a=1;
-(a==1) olduğu sürece{
-    yaz("yapmak istediğiniz işlemi yazınız: yazdir-ekle-sil-kapat");
-    komut = kelimeyi oku;
-    eğer (komut == "yazdir") ise {
-        yaz(filmler);
-    }
-    ya da (komut == "ekle") ise {
-        yaz("Eklemek istediğiniz filmin ismini yazın: ");
-        eklenecek = kelimeyi oku;
-        filmler listesine eklenecek ekle;
-        yaz(filmler);
-    }
-    ya da (komut == "sil") ise{
-        yaz("Silmek istediğiniz filmin ismini yazın: ");
-        silinecek = kelimeyi oku;
-        siraNo = filmler listesindeki silinecek elemanının sırası;
-        filmler listesindeki siraNo. elemanı sil;
-        yaz(filmler);
-
-    }
-    ya da (komut == "kapat") ise{
-        yaz("Programdan çıkış yapılıyor...");
-        a=0; ***burada kır düzgün çalışmadığı için böyle yaptım ***
-    }
-     değil ise {
-        yaz("geçersiz bir komut girdiniz");
-    };
-};
-
-*** For döngüsü ***
-toplam=0;
-x değişkeni 1 ile 10 arasında 1 artarken {
-    toplam = toplam + x;
-};
-yaz("1'den 10'a kadar olan sayıların toplamı:");
-yaz(toplam);
-
-*** For-each döngüsü ***
-L =  liste (3,7,40,5,2,4,3,77);
-toplam = 0;
-L içindeki her i değeri için{
-    yaz(i);
-    toplam=toplam+i;
-};
-yaz(toplam);
-
-*** Function without return ***
-a ile merhaba işi {
-  yaz("merhaba");
-  yaz(a);
-};
-yaz("isminizi giriniz");
-isim = kelimeyi oku;
-
-
-isim ile merhaba;
-
-
 
 bitir
