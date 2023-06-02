@@ -1,17 +1,7 @@
 başla
 
-list = liste(1,2,3,4, "aaa", "bbb", "ccc");
-int = rastgele(list);
-yaz(int);
+a = sayıyı oku;
+yaz(a);
 
-sifre = rastgele(2,10);
-yaz("Şifre 2 ile 10 arasında bir sayı. Tahmin et:");
-tahmin = sayıyı oku;
-eğer(tahmin == sifre) ise {
-yaz("Doğru tahmin!");
-}
-değil ise {
-yaz("Yanlış tahmin :(");
-};
 
 bitir

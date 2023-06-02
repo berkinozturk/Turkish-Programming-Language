@@ -296,6 +296,7 @@ while_stat ::= expr_or_bool:c WHILE LCURLY recursive:s SEMI RCURLY   {: RESULT =
             ;
 
 output_stat ::= YAZ LPAREN expr:e RPAREN  {: RESULT = new OutputInstruction(e); :}
+            | YAZ LPAREN RPAREN {: RESULT = new OutputInstructionEmpty(); :}
             ;
 
 break_stat::= BREAK {: RESULT = new BreakInstruction(); :}
