@@ -1,6 +1,7 @@
 <div align="center">
-  <img src="https://github.com/berkinozturk/Turkish-Programming-Language/assets/116017474/a23333ab-f3d5-48ea-9ca4-c7d32c3cf943" alt="Unknown" width="600" height="300">
+  <img src="https://github.com/berkinozturk/Turkish-Programming-Language/assets/94238138/2730d42e-a78e-4d12-aa2c-b8e6c2a5d99b" alt="Unknown" width="600" height="300">
 </div>
+
 
 # Sigun Programming Language
 
