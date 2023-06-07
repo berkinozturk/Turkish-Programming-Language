@@ -144,6 +144,72 @@ Simple Instructions:
 ```
 *Break_stat ::= "kır" ;
 ```
+```
+*Continue_stat ::= "atla" ;
+```
+```
+*While_stat ::= Expr_or_bool:c "olduğu sürece" "{" Recursive:s ";" "}"
+;
+```
+```
+*For_stat ::= IDENT:i "değişkeni" Expr:e "ile" Expr:e2 "arasında" Expr:e3 "artarken" "{" Recursive:s ";" "}"
+              | IDENT:i "değişkeni" Expr:e "ile" Expr:e2 "arasında" Expr:e3 "azalırken" "{" Recursive:s ";" "}" ;
+```
+```
+*Foreach_stat ::= Expr:e "içindeki" "her" IDENT:i "değeri" "için" "{"Recursive:s ";" "}" ;
+```
+```
+*Function_stat ::= Recursive_id:i "ile" IDENT:e "işi" "{" Recursive:si ";" "}" 
+                   | Recursive_id:i "ile" IDENT:e "işi" "{" Recursive:si ";" Return_function:r "}" ;
+```
+```
+*Recursive_id ::= Recursive_id:a “,” Expr:e 
+                  | Expr:e;
+```
+```
+*Return_function ::= Expr:e "döndür" ";"
+;
+```
+```
+*Call_function ::= Recursive_id:e "ile" IDENT:i
+;
+```
+```
+*Output_stat ::= "yaz" "(" expr:e ")"
+;
+```
+```
+*List_add ::= Expr:e "listesine" Expr:e1 "ekle"
+;
+```
+```
+*List_remove ::= Expr:e "listesindeki" Expr:e1 "." "elemanı" "sil” ;
+```
+```
+*List_clear ::= Expr:e "listesini temizle" ;
+```
+```
+*List_update ::= Expr:e "listesinin" Expr:e1 "." "elemanı" "=" Expr: e2 ;
+```
+```
+*List_update ::= Expr:e "listesinin" Expr:e1 "." "elemanı" "=" Expr: e2 ;
+```
+Assignment Operators:
+```
+*Num_rel
+::= "==" 
+| "<"
+| "<=" 
+| ">"
+| ">=" 
+| "!="
+;
+```
+```
+*Str_rel ::= "eşit"
+| "eşit değil" ;
+```
+
 
 #### For detailed information about the Sigun Programming Language you can visit the <a href="https://github.com/iremhttp/Sigun/wiki">wiki page</a>.
 
