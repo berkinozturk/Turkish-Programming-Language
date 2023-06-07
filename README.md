@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="https://github.com/berkinozturk/Turkish-Programming-Language/assets/116017474/a23333ab-f3d5-48ea-9ca4-c7d32c3cf943" alt="Unknown" width="600" height="300">
+</div>
+
 # Sigun Programming Language
 
 Unlike existing programming languages, Sigun programming language is specifically designed for native Turkish speakers, with the goal of not only translating English syntax into Turkish but also embodying the naturalness and advantage of coding in one’s own language. Our project aims to create a unique syntax structure for Turkish programming languages by emphasizing the naturalness of the language, and to surpass similar projects.To accomplish this, we are using a combination of LALR parsing and syntax-directed translation methodologies. </br>
