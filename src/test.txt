@@ -1,7 +1,8 @@
 başla
 
-a = sayıyı oku;
-yaz(a);
 
+a = liste("selam","canım", 1);
+a listesindeki 4. elemanı sil;
+yaz(a);
 
 bitir

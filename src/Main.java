@@ -772,6 +772,9 @@ class ListRemove implements SimpleInstruction {
 		Object list = exprList.run(hm);
 		ArrayList<Object> listA;
 
+		try{
+
+
 		if(list instanceof ArrayList){
 			listA = (ArrayList<Object>) list;
 		}
@@ -790,7 +793,10 @@ class ListRemove implements SimpleInstruction {
 		}
 		Object newValue = value.run(hm);
 		listA.remove((int)newValue);
-
+		}
+		catch (Exception e) {
+			System.out.println("HATA: Silinmek istenen eleman liste uzunluğunu aşıyor. Lütfen listenin içindeki bir elemanı seçiniz.");
+		}
 	}
 }
 /** Getting length of a list */
