@@ -216,7 +216,7 @@ Assignment Operators:
 ```
 
 
-#### For detailed information about the Sigun Programming Language you can visit the <a href="https://github.com/iremhttp/Sigun/wiki">wiki page</a>.
+#### For detailed information about the Sigun Programming Language you can visit the <a href="https://github.com/berkinozturk/Turkish-Programming-Language/wiki">wiki page</a>.
 
 
 
